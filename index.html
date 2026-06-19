@@ -112,6 +112,20 @@
   .pi-cat{font-size:12px;color:var(--muted);}
   .pi-notes{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;}
   .pi-cost{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--paper);align-self:center;}
+  .pi-addr{font-size:12px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.4;}
+  .pi-addr .pin{font-size:12px;flex-shrink:0;}
+  .pi-map-btn{color:var(--accent);font-weight:600;text-decoration:none;font-size:12px;flex-shrink:0;}
+  .map-preview-wrap{border-radius:14px;overflow:hidden;margin-bottom:16px;background:var(--surface);border:1px solid var(--line);}
+  .map-frame{width:100%;height:220px;border:0;display:block;}
+  .map-pins{margin-bottom:4px;}
+  .map-pin-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:9px;cursor:pointer;}
+  .map-pin-row.sel{border-color:var(--accent);background:var(--accent-tint);}
+  .mp-icon{font-size:18px;flex:0 0 auto;}
+  .mp-body{flex:1;min-width:0;}
+  .mp-title{font-size:14px;font-weight:600;}
+  .mp-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .mp-open{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:6px 10px;border-radius:8px;background:var(--accent-tint);border:1px solid var(--accent-line);}
+  .map-route-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5;}
   .fab-row{position:sticky;bottom:0;padding-top:4px;}
   .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:calc(var(--tab-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(20,22,29,0.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;z-index:20;}
   .tab{flex:1;background:none;border:none;cursor:pointer;color:var(--muted-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding-top:8px;}
@@ -122,6 +136,9 @@
   .sheet{width:100%;max-width:480px;background:var(--bg);border-radius:20px 20px 0 0;border-top:1px solid var(--line);max-height:92vh;overflow-y:auto;padding:8px 18px calc(24px + env(safe-area-inset-bottom));animation:slideup 0.28s ease;}
   @keyframes slideup{from{transform:translateY(100%);}to{transform:none;}}
   .sheet-grab{width:40px;height:4px;background:var(--surface-2);border-radius:999px;margin:8px auto 14px;}
+  .sheet-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--surface-2);border:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .sheet-close:active{background:var(--surface);}
+  .sheet{position:relative;}
   .sheet h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px;}
   .sheet .lead{font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:18px;}
   .field{margin-bottom:14px;}
@@ -237,11 +254,15 @@
       <div id="plan-list"></div>
       <div class="fab-row"><button class="btn btn-primary" id="add-plan-btn">&#65291; Add to itinerary</button></div>
     </section>
+    <section class="view" id="view-map">
+      <div id="map-content"></div>
+    </section>
   </div>
   <nav class="tabbar">
     <button class="tab active" data-tab="flights"><span class="ti">&#9992;</span>Flights</button>
     <button class="tab" data-tab="stay"><span class="ti">&#127968;</span>Stay</button>
     <button class="tab" data-tab="plan"><span class="ti">&#128203;</span>Plan</button>
+    <button class="tab" data-tab="map"><span class="ti">&#128506;</span>Map</button>
   </nav>
 </div>
 
@@ -252,6 +273,7 @@
     <input type="hidden" id="f-id">
     <div class="field"><label for="f-title">What is it?</label><input type="text" id="f-title" placeholder="e.g. Senso-ji Temple"></div>
     <div class="field"><label>Category</label><div class="cat-chips" id="cat-chips"></div></div>
+    <div class="field"><label for="f-addr">Address (optional)</label><input type="text" id="f-addr" placeholder="e.g. 2-3-1 Asakusa, Taito City, Tokyo"></div>
     <div class="two-col">
       <div class="field"><label for="f-date">Date</label><input type="date" id="f-date" min="2026-06-22" max="2026-07-02"></div>
       <div class="field"><label for="f-time">Time</label><input type="time" id="f-time"></div>
@@ -292,6 +314,7 @@
 <div class="overlay" id="trip-overlay">
   <div class="sheet">
     <div class="sheet-grab"></div>
+    <button class="sheet-close" id="trip-sheet-x" aria-label="Close">&times;</button>
     <div id="trip-sheet-body"></div>
   </div>
 </div>
@@ -354,7 +377,7 @@ async function loadAll(){
   } else {
     activities=(await Local.get('activities'))||[]; stay=(await Local.get('stay'))||null;
   }
-  renderPlan(); renderStay();
+  renderPlan(); renderStay(); renderMapTab();
 }
 async function persistActivity(rec){
   if(mode==='cloud' && supa && tripCode){
@@ -365,7 +388,7 @@ async function persistActivity(rec){
     if(!rec.id) rec.id='a'+Date.now()+Math.random().toString(36).slice(2,6);
     const i=activities.findIndex(a=>a.id===rec.id);
     if(i>=0) activities[i]=rec; else activities.push(rec);
-    await Local.set('activities',activities); renderPlan();
+    await Local.set('activities',activities); renderPlan(); renderMapTab();
   }
 }
 async function removeActivity(id){
@@ -374,7 +397,7 @@ async function removeActivity(id){
     if(error){ toast('Delete failed'); return; }
     await loadAll();
   } else {
-    activities=activities.filter(a=>a.id!==id); await Local.set('activities',activities); renderPlan();
+    activities=activities.filter(a=>a.id!==id); await Local.set('activities',activities); renderPlan(); renderMapTab();
   }
 }
 async function persistStay(s){
@@ -383,7 +406,7 @@ async function persistStay(s){
     if(error){ toast('Save failed'); return; }
     await loadAll();
   } else {
-    stay=s; await Local.set('stay',stay); renderStay();
+    stay=s; await Local.set('stay',stay); renderStay(); renderMapTab();
   }
 }
 
@@ -412,7 +435,9 @@ function renderPlan(){
       const timeHtml=a.time?fmtTime(a.time):'<span class="none">—</span>';
       const costHtml=a.cost?'<div class="pi-cost">'+fmtMoney(a.cost,a.cur||'JPY')+'</div>':'';
       const notesHtml=a.notes?'<div class="pi-notes">'+escapeHtml(a.notes)+'</div>':'';
-      it.innerHTML='<div class="pi-time">'+timeHtml+'</div><div class="pi-body"><div class="pi-title">'+escapeHtml(a.title)+'</div><div class="pi-cat">'+catIcon(a.cat)+' '+catLabel(a.cat)+'</div>'+notesHtml+'</div>'+costHtml;
+      const addrHtml=a.addr?'<div class="pi-addr"><span class="pin">📍</span>'+escapeHtml(a.addr)+' <a class="pi-map-btn" href="https://maps.google.com/?q='+encodeURIComponent(a.addr)+'" target="_blank" rel="noopener">Open</a></div>':'';
+      it.innerHTML='<div class="pi-time">'+timeHtml+'</div><div class="pi-body"><div class="pi-title">'+escapeHtml(a.title)+'</div><div class="pi-cat">'+catIcon(a.cat)+' '+catLabel(a.cat)+'</div>'+addrHtml+notesHtml+'</div>'+costHtml;
+      const mapBtn=it.querySelector('.pi-map-btn'); if(mapBtn) mapBtn.addEventListener('click',e=>e.stopPropagation());
       g.appendChild(it);
     });
     list.appendChild(g);
@@ -428,6 +453,7 @@ function openPlanSheet(activity,prefill){
   document.getElementById('f-id').value=editing?activity.id:'';
   document.getElementById('f-title').value=editing?activity.title:(prefill?prefill.title:'');
   selectedCat=editing?(activity.cat||'sightseeing'):(prefill?prefill.cat:'sightseeing');
+  document.getElementById('f-addr').value=editing?(activity.addr||''):(prefill&&prefill.addr?prefill.addr:'');
   document.getElementById('f-date').value=editing?(activity.date||''):'2026-06-23';
   document.getElementById('f-time').value=editing?(activity.time||''):'';
   document.getElementById('f-cur').value=editing?(activity.cur||'JPY'):'JPY';
@@ -444,7 +470,7 @@ document.getElementById('plan-overlay').addEventListener('click',e=>{ if(e.targe
 document.getElementById('plan-save').addEventListener('click',async()=>{
   const title=document.getElementById('f-title').value.trim();
   if(!title){ document.getElementById('f-title').focus(); return; }
-  const rec={ id:document.getElementById('f-id').value||'', title, cat:selectedCat, date:document.getElementById('f-date').value, time:document.getElementById('f-time').value, cur:document.getElementById('f-cur').value, cost:document.getElementById('f-cost').value?Number(document.getElementById('f-cost').value):null, notes:document.getElementById('f-notes').value.trim() };
+  const rec={ id:document.getElementById('f-id').value||'', title, cat:selectedCat, addr:document.getElementById('f-addr').value.trim(), date:document.getElementById('f-date').value, time:document.getElementById('f-time').value, cur:document.getElementById('f-cur').value, cost:document.getElementById('f-cost').value?Number(document.getElementById('f-cost').value):null, notes:document.getElementById('f-notes').value.trim() };
   closePlanSheet(); await persistActivity(rec);
 });
 document.getElementById('plan-delete').addEventListener('click',async()=>{
@@ -477,6 +503,63 @@ function renderStay(){
   c.innerHTML=h;
   document.getElementById('stay-edit-btn').addEventListener('click',()=>openStaySheet());
 }
+
+// ---------- map tab ----------
+function mapsEmbedUrl(addr){ return 'https://www.google.com/maps?q='+encodeURIComponent(addr)+'&output=embed'; }
+function getPins(){
+  const pins=[];
+  if(stay&&stay.name) pins.push({ label: stay.name, addr: stay.addr||stay.name, kind:'stay', sub:'Your stay' });
+  activities.forEach(a=>{
+    if(a.addr){
+      const sub=(a.date?fmtDate(a.date):'No date')+(a.time?' · '+fmtTime(a.time):'');
+      pins.push({ label:a.title, addr:a.addr, kind:a.cat, sub });
+    }
+  });
+  return pins;
+}
+function renderMapTab(){
+  const root=document.getElementById('map-content'); if(!root) return;
+  const pins=getPins();
+  if(!pins.length){
+    root.innerHTML='<div class="empty"><div class="big">🗺️</div><p>No addresses yet.<br>Add your stay address, or pin a sightseeing spot from the Plan tab, to see them here.</p></div>';
+    return;
+  }
+  let html='<div class="map-preview-wrap"><iframe id="map-frame" class="map-frame" src="'+mapsEmbedUrl(pins[0].addr)+'" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>';
+  html+='<div class="map-pins">';
+  pins.forEach((p,i)=>{
+    html+='<div class="map-pin-row'+(i===0?' sel':'')+'" data-idx="'+i+'">'+
+      '<div class="mp-icon">'+(p.kind==='stay'?'🏠':catIcon(p.kind))+'</div>'+
+      '<div class="mp-body"><div class="mp-title">'+escapeHtml(p.label)+'</div><div class="mp-sub">'+escapeHtml(p.sub)+'</div></div>'+
+      '<a class="mp-open" href="https://maps.google.com/?q='+encodeURIComponent(p.addr)+'" target="_blank" rel="noopener">Open</a>'+
+      '</div>';
+  });
+  html+='</div>';
+  if(pins.length>1){
+    html+='<button class="btn btn-primary" id="map-route-btn" style="margin-top:14px;">Open full route in Maps</button>';
+    html+='<div class="map-route-note">Opens all '+pins.length+' stops as one route in your Maps app, in the order shown above.</div>';
+  }
+  root.innerHTML=html;
+  root.querySelectorAll('.map-pin-row').forEach(row=>{
+    row.addEventListener('click',(e)=>{
+      if(e.target.closest('.mp-open')) return;
+      const idx=Number(row.dataset.idx);
+      const frame=document.getElementById('map-frame'); if(frame) frame.src=mapsEmbedUrl(pins[idx].addr);
+      root.querySelectorAll('.map-pin-row').forEach(r=>r.classList.remove('sel'));
+      row.classList.add('sel');
+    });
+  });
+  root.querySelectorAll('.mp-open').forEach(a=>a.addEventListener('click',e=>e.stopPropagation()));
+  if(pins.length>1){
+    document.getElementById('map-route-btn').addEventListener('click',()=>{
+      const origin=encodeURIComponent(pins[0].addr);
+      const dest=encodeURIComponent(pins[pins.length-1].addr);
+      const mid=pins.slice(1,-1).map(p=>encodeURIComponent(p.addr)).join('|');
+      let url='https://www.google.com/maps/dir/?api=1&origin='+origin+'&destination='+dest;
+      if(mid) url+='&waypoints='+mid;
+      window.open(url,'_blank');
+    });
+  }
+}
 function openStaySheet(){
   const s=stay||{};
   document.getElementById('s-name').value=s.name||'';
@@ -508,17 +591,21 @@ function tripLink(){ return location.origin+location.pathname+'?trip='+tripCode;
 function openTripSheet(){ renderTripSheet(); document.getElementById('trip-overlay').classList.add('open'); }
 function closeTripSheet(){ document.getElementById('trip-overlay').classList.remove('open'); }
 document.getElementById('trip-overlay').addEventListener('click',e=>{ if(e.target.id==='trip-overlay') closeTripSheet(); });
+document.getElementById('trip-sheet-x').addEventListener('click',closeTripSheet);
 document.getElementById('trip-btn').addEventListener('click',openTripSheet);
 document.getElementById('sync-banner-btn').addEventListener('click',openTripSheet);
 
 function renderTripSheet(){
   const body=document.getElementById('trip-sheet-body');
+  const closeX=document.getElementById('trip-sheet-x');
   if(mode==='local'){
+    closeX.style.display='flex';
     body.innerHTML='<div class="sheet-grab" style="display:none"></div><h2>Sharing isn\'t set up</h2><p class="lead">This copy is running locally, so plans only live on this device. To let your family edit the same trip together, the app needs your Supabase keys added and to be hosted online. Until then, everything still works here on your phone.</p><button class="btn btn-ghost" id="trip-close-btn">Got it</button>';
     document.getElementById('trip-close-btn').addEventListener('click',closeTripSheet);
     return;
   }
   if(!tripCode){
+    closeX.style.display='none';
     body.innerHTML=
       '<h2>Share this trip</h2><p class="lead">Create a trip to get a link your family can open. Anyone with the link can view and edit together.</p>'+
       '<div class="field"><label for="t-name">Trip name</label><input type="text" id="t-name" value="Brody\'s Japan Trip"></div>'+
@@ -530,13 +617,16 @@ function renderTripSheet(){
     document.getElementById('t-join-btn').addEventListener('click',()=>joinTrip(document.getElementById('t-join').value));
     return;
   }
+  closeX.style.display='flex';
   body.innerHTML=
     '<h2>Trip shared</h2><p class="lead">Send this link to your family. Whoever opens it joins '+escapeHtml(tripName||'this trip')+' and edits the same plans live.</p>'+
     '<div class="code-box"><div class="lbl">Trip link</div><div class="code">'+escapeHtml(tripLink())+'</div></div>'+
     '<div class="sheet-actions"><button class="btn btn-ghost" id="t-copy-code">Copy code</button><button class="btn btn-primary" id="t-copy-link">Copy link</button></div>'+
+    '<div style="margin-top:14px"><button class="btn btn-primary" id="t-done">Done — go to trip</button></div>'+
     '<div style="margin-top:10px"><button class="btn btn-danger" id="t-leave">Leave trip on this device</button></div>';
   document.getElementById('t-copy-code').addEventListener('click',()=>copyText(tripCode,'Code copied'));
   document.getElementById('t-copy-link').addEventListener('click',()=>copyText(tripLink(),'Link copied'));
+  document.getElementById('t-done').addEventListener('click',closeTripSheet);
   document.getElementById('t-leave').addEventListener('click',async()=>{ tripCode=null; await Local.set('tripCode',null); updateTripUI(); renderTripSheet(); await loadAll(); });
 }
 function copyText(txt,msg){
