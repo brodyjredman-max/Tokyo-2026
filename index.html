@@ -1039,7 +1039,7 @@ function buildChatSystemPrompt(){
     const named=activities.filter(a=>a.title).slice(0,6).map(a=>a.title).join(', ');
     if(named) ctx+="Planned stops include: "+named+". ";
   }
-  ctx+="For anything time-sensitive like live train status, exact current prices, or weather, give your best general knowledge and mention it may have changed.";
+  ctx+="Your training data has a cutoff and is NOT live — never state a specific current exchange rate, today's weather, or a live train status as if it's current, since you cannot know that. If asked to convert yen and dollars, don't calculate it yourself — tell them to use the Currency & Tipping tool in the app's More tab, which already has an up-to-date rate. For other things that change daily (current prices, train schedules, weather), say you don't have live data and suggest checking a current source, rather than guessing a specific number.";
   return ctx;
 }
 
