@@ -18,6 +18,8 @@
   .topbar .eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:5px;}
   .topbar h1{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700;letter-spacing:-0.01em;}
   .topbar .sub{font-size:12px;color:var(--muted);margin-top:3px;}
+  .topbar-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-top:2px;}
+  .icon-btn{width:36px;height:36px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);color:var(--paper);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;}
   .trip-btn{flex:0 0 auto;background:var(--surface-2);border:1px solid var(--line);color:var(--paper);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 12px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:2px;}
   .trip-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--muted-dim);}
   .trip-btn.live .dot{background:var(--sage);}
@@ -126,6 +128,68 @@
   .mp-sub{font-size:11px;color:var(--muted);margin-top:2px;}
   .mp-open{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:6px 10px;border-radius:8px;background:var(--accent-tint);border:1px solid var(--accent-line);}
   .map-route-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5;}
+  .chat-wrap{display:flex;flex-direction:column;min-height:320px;}
+  .chat-status-row{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 12px;font-size:12px;color:var(--muted);flex:0 0 auto;gap:10px;}
+  .chat-status-row .links{display:flex;gap:14px;flex-shrink:0;}
+  .chat-key-link{background:none;border:none;color:var(--accent);font-weight:600;font-size:12px;cursor:pointer;padding:2px 0;}
+  .chat-messages{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .chat-empty{text-align:center;color:var(--muted);padding:26px 10px 14px;font-size:14px;line-height:1.6;}
+  .chat-empty .big{font-size:30px;display:block;margin-bottom:8px;}
+  .chat-suggest-row{display:flex;flex-direction:column;gap:8px;padding:6px 2px 4px;}
+  .chat-suggest-chip{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:13.5px;color:var(--paper);cursor:pointer;text-align:left;}
+  .chat-suggest-chip:active{background:var(--surface-2);}
+  .chat-bubble{max-width:84%;padding:11px 13px;border-radius:14px;font-size:14px;line-height:1.5;margin-bottom:10px;white-space:pre-wrap;word-wrap:break-word;}
+  .chat-bubble.user{background:var(--accent);color:#fff;margin-left:auto;border-bottom-right-radius:4px;}
+  .chat-bubble.assistant{background:var(--surface);color:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px;}
+  .chat-typing{display:flex;gap:4px;padding:2px 0;}
+  .chat-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:0.4;display:inline-block;animation:typingDot 1.2s infinite ease-in-out;}
+  .chat-typing span:nth-child(2){animation-delay:0.2s;}
+  .chat-typing span:nth-child(3){animation-delay:0.4s;}
+  @keyframes typingDot{0%,80%,100%{opacity:0.3;transform:scale(0.8);}40%{opacity:1;transform:scale(1);}}
+  .chat-inputbar{flex:0 0 auto;display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--line);background:var(--bg);align-items:flex-end;}
+  .chat-inputbar textarea{flex:1;resize:none;max-height:90px;background:var(--surface);border:1px solid var(--line);border-radius:14px;color:var(--paper);font-family:'Inter',sans-serif;font-size:15px;padding:12px 13px;}
+  .chat-inputbar textarea:focus{outline:2px solid var(--accent-line);border-color:var(--accent);}
+  .chat-send{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:var(--accent);color:#fff;border:none;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .chat-send:active{background:#cf5340;}
+  .pi-attendees{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;}
+  .pi-avatar{width:20px;height:20px;border-radius:50%;background:var(--accent-tint);border:1px solid var(--accent-line);color:var(--accent);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .more-count{font-size:11px;color:var(--muted-dim);font-weight:500;margin-left:6px;}
+  .pack-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .pack-row:last-child{border-bottom:none;}
+  .pack-check{flex:0 0 auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;padding:0;}
+  .pack-check.checked{background:var(--accent);border-color:var(--accent);}
+  .pack-text{flex:1;font-size:14px;color:var(--paper);}
+  .pack-text.checked{color:var(--muted-dim);text-decoration:line-through;}
+  .pack-del{flex:0 0 auto;background:none;border:none;color:var(--muted-dim);font-size:18px;cursor:pointer;padding:0 2px;}
+  .note-row{padding:10px 0;border-bottom:1px solid var(--line);}
+  .note-row:last-child{border-bottom:none;}
+  .note-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px;}
+  .note-author{font-size:12px;font-weight:700;color:var(--accent);}
+  .note-time{font-size:11px;color:var(--muted-dim);flex-shrink:0;}
+  .note-text{font-size:14px;color:var(--paper);line-height:1.5;margin-bottom:4px;}
+  .note-del{background:none;border:none;color:var(--muted-dim);font-size:11px;cursor:pointer;padding:0;text-decoration:underline;}
+  .phrase-row{padding:9px 0;border-bottom:1px solid var(--line);}
+  .phrase-row:last-child{border-bottom:none;}
+  .phrase-jp{font-size:15px;font-weight:600;color:var(--paper);}
+  .phrase-romaji{font-size:12px;color:var(--accent);margin-top:1px;}
+  .phrase-en{font-size:12px;color:var(--muted);margin-top:2px;}
+  .search-overlay{align-items:stretch;z-index:50;}
+  .search-panel{width:100%;max-width:480px;height:100%;background:var(--bg);display:flex;flex-direction:column;margin:0 auto;}
+  .search-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top));border-bottom:1px solid var(--line);flex:0 0 auto;}
+  .search-back{background:var(--surface-2);border:none;color:var(--paper);width:36px;height:36px;border-radius:50%;font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;}
+  .search-bar input{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--paper);font-family:'Inter',sans-serif;font-size:15px;padding:11px 14px;}
+  .search-bar input:focus{outline:2px solid var(--accent-line);border-color:var(--accent);}
+  .search-results{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px calc(24px + env(safe-area-inset-bottom));}
+  .search-empty{text-align:center;color:var(--muted);padding:50px 18px;font-size:14px;line-height:1.6;}
+  .search-group-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);font-weight:600;margin:18px 0 8px;}
+  .search-group-label:first-child{margin-top:2px;}
+  .search-result-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;}
+  .search-result-row:active{background:var(--surface-2);}
+  .sr-icon{font-size:17px;flex:0 0 auto;width:20px;text-align:center;}
+  .sr-body{flex:1;min-width:0;}
+  .sr-title{font-size:14px;font-weight:600;color:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sr-sub{font-size:12px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sr-arrow{color:var(--accent);flex:0 0 auto;font-size:14px;}
   .fab-row{position:sticky;bottom:0;padding-top:4px;}
   .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:calc(var(--tab-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(20,22,29,0.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;z-index:20;}
   .tab{flex:1;background:none;border:none;cursor:pointer;color:var(--muted-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding-top:8px;}
@@ -174,7 +238,10 @@
       <h1>Brody's Japan Trip</h1>
       <div class="sub">Jun 22 – Jul 2, 2026 · Reservation DHSC6C</div>
     </div>
-    <button class="trip-btn" id="trip-btn"><span class="dot"></span><span id="trip-btn-label">Sync</span></button>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="search-open-btn" aria-label="Search">&#128269;</button>
+      <button class="trip-btn" id="trip-btn"><span class="dot"></span><span id="trip-btn-label">Sync</span></button>
+    </div>
   </div>
 
   <div class="sync-banner hidden" id="sync-banner">
@@ -257,13 +324,119 @@
     <section class="view" id="view-map">
       <div id="map-content"></div>
     </section>
+    <section class="view" id="view-chat">
+      <div class="chat-wrap">
+        <div class="chat-status-row" id="chat-status-row"></div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-inputbar">
+          <textarea id="chat-input" rows="1" placeholder="Ask about Tokyo…"></textarea>
+          <button class="chat-send" id="chat-send-btn" aria-label="Send">&#8593;</button>
+        </div>
+      </div>
+    </section>
+    <section class="view" id="view-more">
+      <div class="section-head first">Trip Tools</div>
+
+      <details open>
+        <summary>🧳 Packing list <span class="more-count" id="pack-count"></span></summary>
+        <div class="details-body">
+          <div id="pack-list"></div>
+          <button class="btn btn-ghost" id="pack-add-open-btn" style="margin-top:10px;">＋ Add item</button>
+        </div>
+      </details>
+
+      <details>
+        <summary>📝 Family notes <span class="more-count" id="note-count"></span></summary>
+        <div class="details-body">
+          <div id="note-list"></div>
+          <button class="btn btn-ghost" id="note-add-open-btn" style="margin-top:10px;">＋ Post a note</button>
+        </div>
+      </details>
+
+      <details>
+        <summary>🆘 Emergency info</summary>
+        <div class="details-body" id="emg-body"></div>
+      </details>
+
+      <details>
+        <summary>💴 Currency & tipping</summary>
+        <div class="details-body">
+          <div class="two-col">
+            <div class="field"><label for="cur-jpy">Yen (¥)</label><input type="number" id="cur-jpy" placeholder="0"></div>
+            <div class="field"><label for="cur-usd">Dollars ($)</label><input type="number" id="cur-usd" placeholder="0"></div>
+          </div>
+          <div class="map-route-note" style="margin-top:-6px;">Approx. rate: ¥161 = $1 (June 2026) — fluctuates daily, use for ballpark only.</div>
+          <div style="margin-top:14px;font-size:13px;color:var(--muted);line-height:1.6;">Tipping isn't customary in Japan — restaurants, taxis, and hotels don't expect it, and trying to tip can sometimes confuse staff. A few upscale places add a service charge automatically, which is different from a tip.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🗣️ Phrasebook</summary>
+        <div class="details-body" id="phrase-body"></div>
+      </details>
+    </section>
   </div>
   <nav class="tabbar">
     <button class="tab active" data-tab="flights"><span class="ti">&#9992;</span>Flights</button>
     <button class="tab" data-tab="stay"><span class="ti">&#127968;</span>Stay</button>
     <button class="tab" data-tab="plan"><span class="ti">&#128203;</span>Plan</button>
     <button class="tab" data-tab="map"><span class="ti">&#128506;</span>Map</button>
+    <button class="tab" data-tab="chat"><span class="ti">&#128172;</span>Ask</button>
+    <button class="tab" data-tab="more"><span class="ti">&#129520;</span>More</button>
   </nav>
+</div>
+
+<div class="overlay" id="key-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <button class="sheet-close" id="key-sheet-x" aria-label="Close">&times;</button>
+    <h2>About this AI assistant</h2>
+    <p class="lead">This chat runs on a small free helper Brody set up for the trip — no account or key needed on your end. If it says "not set up," ask Brody to finish connecting it; it only takes him a few minutes.</p>
+  </div>
+</div>
+
+<div class="overlay" id="pack-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <button class="sheet-close" id="pack-sheet-x" aria-label="Close">&times;</button>
+    <h2>Add to packing list</h2>
+    <div class="field"><label for="pack-input">Item</label><input type="text" id="pack-input" placeholder="e.g. Phone charger"></div>
+    <button class="btn btn-primary" id="pack-add-btn">Add item</button>
+  </div>
+</div>
+
+<div class="overlay" id="note-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <button class="sheet-close" id="note-sheet-x" aria-label="Close">&times;</button>
+    <h2>Post a note</h2>
+    <div class="field"><label>From</label><div class="cat-chips" id="note-author-chips"></div></div>
+    <div class="field"><label for="note-input">Note</label><textarea id="note-input" placeholder="Anything the family should know…"></textarea></div>
+    <button class="btn btn-primary" id="note-post-btn">Post note</button>
+  </div>
+</div>
+
+<div class="overlay" id="emg-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <button class="sheet-close" id="emg-sheet-x" aria-label="Close">&times;</button>
+    <h2>Insurance & emergency notes</h2>
+    <div class="field"><label for="emg-provider">Insurance provider</label><input type="text" id="emg-provider" placeholder="e.g. Allianz Travel"></div>
+    <div class="field"><label for="emg-policy">Policy number</label><input type="text" id="emg-policy" placeholder="Policy #"></div>
+    <div class="field"><label for="emg-phone">Insurance phone</label><input type="tel" id="emg-phone" placeholder="+1…"></div>
+    <div class="field"><label for="emg-notes">Other notes</label><textarea id="emg-notes" placeholder="Allergies, medications, blood type, anything useful in an emergency…"></textarea></div>
+    <button class="btn btn-primary" id="emg-save-btn">Save</button>
+  </div>
+</div>
+
+<div class="overlay search-overlay" id="search-overlay">
+  <div class="search-panel">
+    <div class="search-bar">
+      <button class="search-back" id="search-close-btn" aria-label="Close search">&#8592;</button>
+      <input type="text" id="search-input" placeholder="Search anything in this trip…" autocomplete="off">
+    </div>
+    <div class="search-results" id="search-results"></div>
+  </div>
 </div>
 
 <div class="overlay" id="plan-overlay">
@@ -274,6 +447,7 @@
     <div class="field"><label for="f-title">What is it?</label><input type="text" id="f-title" placeholder="e.g. Senso-ji Temple"></div>
     <div class="field"><label>Category</label><div class="cat-chips" id="cat-chips"></div></div>
     <div class="field"><label for="f-addr">Address (optional)</label><input type="text" id="f-addr" placeholder="e.g. 2-3-1 Asakusa, Taito City, Tokyo"></div>
+    <div class="field"><label>Who's coming? (optional)</label><div class="cat-chips" id="attendee-chips"></div></div>
     <div class="two-col">
       <div class="field"><label for="f-date">Date</label><input type="date" id="f-date" min="2026-06-22" max="2026-07-02"></div>
       <div class="field"><label for="f-time">Time</label><input type="time" id="f-time"></div>
@@ -325,6 +499,7 @@
 // ============ CONFIG — paste your Supabase project values here ============
 const SUPABASE_URL = "https://pnexpwqoyxnvpqkszeut.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuZXhwd3FveXhudnBxa3N6ZXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NzY3MTYsImV4cCI6MjA5NzQ1MjcxNn0.hGuE683Xs22BI1bVyk2UCTf7XeyaQXT_YGMy-E6PfKQ";
+const TRIP_CODE = "9790117c-7359-4a98-ad5e-3f2f1836b6c7"; // the one trip this app always connects to — no setup needed
 // ========================================================================
 
 // ---- local per-device storage (remembers which trip this device joined) ----
@@ -338,27 +513,38 @@ let supa = null, mode = 'local', tripCode = null, tripName = '';
 let activities = [], stay = null, selectedCat = 'sightseeing';
 
 const CATS = { sightseeing:'🏯 Sightseeing', food:'🍜 Food & drink', shopping:'🛍️ Shopping', nightlife:'🌃 Nightlife', nature:'🌸 Nature', other:'📍 Other' };
+const FAMILY = ['Amy','Kirk','Drake','Brock','Mace','Brody'];
+function initials(name){ return (name||'?').slice(0,1).toUpperCase(); }
 function catIcon(c){ return (CATS[c]||CATS.other).split(' ')[0]; }
 function catLabel(c){ return (CATS[c]||CATS.other).replace(/^\S+\s/,''); }
 const IDEAS = [
-  {title:'Senso-ji Temple',cat:'sightseeing'},{title:'teamLab Planets',cat:'sightseeing'},
-  {title:'Shibuya Crossing & Sky',cat:'sightseeing'},{title:'Meiji Jingu Shrine',cat:'nature'},
-  {title:'Tsukiji Outer Market',cat:'food'},{title:'Shinjuku Gyoen',cat:'nature'},
-  {title:'Akihabara',cat:'shopping'},{title:'Tokyo Skytree',cat:'sightseeing'},
-  {title:'Golden Gai bars',cat:'nightlife'},{title:'Ueno Park & museums',cat:'sightseeing'}
+  {title:'Senso-ji Temple',cat:'sightseeing',addr:'2-3-1 Asakusa, Taito City, Tokyo 111-0032',notes:"Tokyo's oldest temple. Free to enter, main hall open 6am–5pm. 5 min walk from Asakusa Station. Nakamise shopping street leads right up to it — go early to beat crowds."},
+  {title:'teamLab Planets',cat:'sightseeing',addr:'6-1-16 Toyosu, Koto City, Tokyo 135-0061',notes:"Immersive barefoot art museum — wear shorts or roll-up pants, water areas get you wet. Book timed tickets ahead online. 1 min walk from Shin-Toyosu Station."},
+  {title:'teamLab Borderless',cat:'sightseeing',addr:'Azabudai Hills Garden Plaza B, 1-2-4 Azabudai, Minato City, Tokyo 106-0041',notes:"The newer, larger digital art museum — relocated here from Odaiba in 2024. Different artworks than Planets, no fixed route. Book ahead; sells out often."},
+  {title:'Shibuya Crossing & Sky',cat:'sightseeing',addr:'2-24-12 Shibuya, Shibuya City, Tokyo 150-6145',notes:"The famous scramble crossing is right outside Shibuya Station. Shibuya Sky (same building, Scramble Square) is the best rooftop view — book a sunset slot online in advance."},
+  {title:'Meiji Jingu Shrine',cat:'nature',addr:'1-1 Yoyogikamizonocho, Shibuya City, Tokyo 151-8557',notes:"Peaceful forested shrine, free entry, open sunrise to sunset. 1 min walk from JR Harajuku Station — easy to pair with Takeshita Street."},
+  {title:'Tsukiji Outer Market',cat:'food',addr:'4 Tsukiji, Chuo City, Tokyo 104-0045',notes:"Street food and knife shops — the famous tuna auction moved to Toyosu, but the outer market stays lively for breakfast/lunch. Go hungry, go early."},
+  {title:'Shinjuku Gyoen',cat:'nature',addr:'11 Naitomachi, Shinjuku City, Tokyo 160-0014',notes:"Huge garden mixing Japanese, French, and English styles. Small entry fee, closed Mondays. A calm break from Shinjuku's chaos."},
+  {title:'Akihabara',cat:'shopping',addr:'1 Kanda Sotokanda, Chiyoda City, Tokyo 101-0021',notes:"Electronics, anime, and arcades district around Akihabara Station. This pin marks the main strip — wander Chuo-dori for the multi-floor shops."},
+  {title:'Tokyo Skytree',cat:'sightseeing',addr:'1-1-2 Oshiage, Sumida City, Tokyo 131-0045',notes:"Tallest structure in Japan. Book observation deck tickets online to skip lines. Solamachi mall at the base has good food options."},
+  {title:'Golden Gai bars',cat:'nightlife',addr:'1-chome Kabukicho, Shinjuku City, Tokyo 160-0021',notes:"Tiny alleyway of 200+ micro-bars, many seat 5–10 people. Some charge a small seating/cover fee — cash helps. Best after 8pm."},
+  {title:'Ueno Park & museums',cat:'sightseeing',addr:'5-20 Uenokoen, Taito City, Tokyo 110-0007',notes:"Big park with Tokyo National Museum, the zoo, and a pond. Cherry blossoms in spring, but pleasant any season. 5 min from Ueno Station."},
+  {title:'Tokyo Tower',cat:'sightseeing',addr:'4-2-8 Shibakoen, Minato City, Tokyo 105-0011',notes:"The original Tokyo tower, lit red and white at night. Slightly less crowded than Skytree, with skyline views toward Mt. Fuji on clear days."},
+  {title:'Imperial Palace East Gardens',cat:'nature',addr:'1-1 Chiyoda, Chiyoda City, Tokyo 100-0001',notes:"Free public gardens on the old castle grounds. Closed Mondays and Fridays. Peaceful, with old stone foundations still visible."},
+  {title:'Harajuku Takeshita Street',cat:'shopping',addr:'1-19 Jingumae, Shibuya City, Tokyo 150-0001',notes:"Quirky fashion, crepes, and youth culture. Gets packed on weekends — go on a weekday morning if you want breathing room."}
 ];
 
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 
 // ---------- tabs ----------
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+name));
+  document.querySelector('.scroll').scrollTop=0;
+  if(name==='chat') setTimeout(sizeChatWrap,30);
+}
 document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    document.getElementById('view-'+t.dataset.tab).classList.add('active');
-    document.querySelector('.scroll').scrollTop=0;
-  });
+  t.addEventListener('click',()=>switchTab(t.dataset.tab));
 });
 
 // ---------- formatting ----------
@@ -371,13 +557,15 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<'
 async function loadAll(){
   if(mode==='cloud' && supa && tripCode){
     const { data, error } = await supa.rpc('get_trip',{ p_code: tripCode });
-    if(error){ console.warn('get_trip',error); return; }
-    if(data===null){ tripCode=null; await Local.set('tripCode',null); openTripSheet(); updateTripUI(); return; }
+    if(error){ console.warn('get_trip',error); toast('Could not load trip data'); return; }
+    if(data===null){ console.warn('Trip code not found in database:',tripCode); toast('Trip data unavailable'); return; }
     tripName=data.name||''; activities=data.activities||[]; stay=data.stay||null;
+    packing=data.packing||[]; notes=data.notes||[]; emergency=data.emergency||null;
   } else {
     activities=(await Local.get('activities'))||[]; stay=(await Local.get('stay'))||null;
+    packing=(await Local.get('packing'))||[]; notes=(await Local.get('notes'))||[]; emergency=(await Local.get('emergency'))||null;
   }
-  renderPlan(); renderStay(); renderMapTab();
+  renderPlan(); renderStay(); renderMapTab(); renderPacking(); renderNotes(); renderEmergency();
 }
 async function persistActivity(rec){
   if(mode==='cloud' && supa && tripCode){
@@ -436,7 +624,8 @@ function renderPlan(){
       const costHtml=a.cost?'<div class="pi-cost">'+fmtMoney(a.cost,a.cur||'JPY')+'</div>':'';
       const notesHtml=a.notes?'<div class="pi-notes">'+escapeHtml(a.notes)+'</div>':'';
       const addrHtml=a.addr?'<div class="pi-addr"><span class="pin">📍</span>'+escapeHtml(a.addr)+' <a class="pi-map-btn" href="https://maps.google.com/?q='+encodeURIComponent(a.addr)+'" target="_blank" rel="noopener">Open</a></div>':'';
-      it.innerHTML='<div class="pi-time">'+timeHtml+'</div><div class="pi-body"><div class="pi-title">'+escapeHtml(a.title)+'</div><div class="pi-cat">'+catIcon(a.cat)+' '+catLabel(a.cat)+'</div>'+addrHtml+notesHtml+'</div>'+costHtml;
+      const attendeesHtml=(a.attendees&&a.attendees.length)?('<div class="pi-attendees">'+a.attendees.map(n=>'<span class="pi-avatar" title="'+escapeHtml(n)+'">'+initials(n)+'</span>').join('')+'</div>'):'';
+      it.innerHTML='<div class="pi-time">'+timeHtml+'</div><div class="pi-body"><div class="pi-title">'+escapeHtml(a.title)+'</div><div class="pi-cat">'+catIcon(a.cat)+' '+catLabel(a.cat)+'</div>'+attendeesHtml+addrHtml+notesHtml+'</div>'+costHtml;
       const mapBtn=it.querySelector('.pi-map-btn'); if(mapBtn) mapBtn.addEventListener('click',e=>e.stopPropagation());
       g.appendChild(it);
     });
@@ -447,6 +636,21 @@ function renderCatChips(){
   const wrap=document.getElementById('cat-chips'); wrap.innerHTML='';
   Object.keys(CATS).forEach(c=>{ const chip=document.createElement('button'); chip.className='cat-chip'+(c===selectedCat?' sel':''); chip.textContent=CATS[c]; chip.addEventListener('click',()=>{selectedCat=c;renderCatChips();}); wrap.appendChild(chip); });
 }
+let selectedAttendees=[];
+function renderAttendeeChips(){
+  const wrap=document.getElementById('attendee-chips'); wrap.innerHTML='';
+  FAMILY.forEach(name=>{
+    const chip=document.createElement('button');
+    chip.className='cat-chip'+(selectedAttendees.includes(name)?' sel':'');
+    chip.textContent=name;
+    chip.addEventListener('click',()=>{
+      if(selectedAttendees.includes(name)) selectedAttendees=selectedAttendees.filter(n=>n!==name);
+      else selectedAttendees=[...selectedAttendees,name];
+      renderAttendeeChips();
+    });
+    wrap.appendChild(chip);
+  });
+}
 function openPlanSheet(activity,prefill){
   const editing=!!activity;
   document.getElementById('plan-sheet-title').textContent=editing?'Edit plan':'Add to itinerary';
@@ -454,13 +658,14 @@ function openPlanSheet(activity,prefill){
   document.getElementById('f-title').value=editing?activity.title:(prefill?prefill.title:'');
   selectedCat=editing?(activity.cat||'sightseeing'):(prefill?prefill.cat:'sightseeing');
   document.getElementById('f-addr').value=editing?(activity.addr||''):(prefill&&prefill.addr?prefill.addr:'');
+  selectedAttendees=editing?(activity.attendees||[]):[];
   document.getElementById('f-date').value=editing?(activity.date||''):'2026-06-23';
   document.getElementById('f-time').value=editing?(activity.time||''):'';
   document.getElementById('f-cur').value=editing?(activity.cur||'JPY'):'JPY';
   document.getElementById('f-cost').value=(editing&&activity.cost)?activity.cost:'';
-  document.getElementById('f-notes').value=editing?(activity.notes||''):'';
+  document.getElementById('f-notes').value=editing?(activity.notes||''):(prefill&&prefill.notes?prefill.notes:'');
   document.getElementById('plan-delete-wrap').style.display=editing?'block':'none';
-  renderCatChips();
+  renderCatChips(); renderAttendeeChips();
   document.getElementById('plan-overlay').classList.add('open');
 }
 function closePlanSheet(){ document.getElementById('plan-overlay').classList.remove('open'); }
@@ -470,7 +675,7 @@ document.getElementById('plan-overlay').addEventListener('click',e=>{ if(e.targe
 document.getElementById('plan-save').addEventListener('click',async()=>{
   const title=document.getElementById('f-title').value.trim();
   if(!title){ document.getElementById('f-title').focus(); return; }
-  const rec={ id:document.getElementById('f-id').value||'', title, cat:selectedCat, addr:document.getElementById('f-addr').value.trim(), date:document.getElementById('f-date').value, time:document.getElementById('f-time').value, cur:document.getElementById('f-cur').value, cost:document.getElementById('f-cost').value?Number(document.getElementById('f-cost').value):null, notes:document.getElementById('f-notes').value.trim() };
+  const rec={ id:document.getElementById('f-id').value||'', title, cat:selectedCat, addr:document.getElementById('f-addr').value.trim(), attendees:selectedAttendees, date:document.getElementById('f-date').value, time:document.getElementById('f-time').value, cur:document.getElementById('f-cur').value, cost:document.getElementById('f-cost').value?Number(document.getElementById('f-cost').value):null, notes:document.getElementById('f-notes').value.trim() };
   closePlanSheet(); await persistActivity(rec);
 });
 document.getElementById('plan-delete').addEventListener('click',async()=>{
@@ -586,8 +791,8 @@ document.getElementById('stay-save').addEventListener('click',async()=>{
   closeStaySheet(); await persistStay(s);
 });
 
-// ---------- trip sharing ----------
-function tripLink(){ return location.origin+location.pathname+'?trip='+tripCode; }
+// ---------- trip sharing (one fixed trip — nothing to create or join) ----------
+function tripLink(){ return location.origin+location.pathname; }
 function openTripSheet(){ renderTripSheet(); document.getElementById('trip-overlay').classList.add('open'); }
 function closeTripSheet(){ document.getElementById('trip-overlay').classList.remove('open'); }
 document.getElementById('trip-overlay').addEventListener('click',e=>{ if(e.target.id==='trip-overlay') closeTripSheet(); });
@@ -598,56 +803,23 @@ document.getElementById('sync-banner-btn').addEventListener('click',openTripShee
 function renderTripSheet(){
   const body=document.getElementById('trip-sheet-body');
   const closeX=document.getElementById('trip-sheet-x');
+  closeX.style.display='flex';
   if(mode==='local'){
-    closeX.style.display='flex';
-    body.innerHTML='<div class="sheet-grab" style="display:none"></div><h2>Sharing isn\'t set up</h2><p class="lead">This copy is running locally, so plans only live on this device. To let your family edit the same trip together, the app needs your Supabase keys added and to be hosted online. Until then, everything still works here on your phone.</p><button class="btn btn-ghost" id="trip-close-btn">Got it</button>';
+    body.innerHTML='<h2>Sharing isn\'t set up</h2><p class="lead">This copy is running locally, so plans only live on this device. To let your family edit the same trip together, the app needs its Supabase keys added and to be hosted online. Until then, everything still works here on your phone.</p><button class="btn btn-ghost" id="trip-close-btn">Got it</button>';
     document.getElementById('trip-close-btn').addEventListener('click',closeTripSheet);
     return;
   }
-  if(!tripCode){
-    closeX.style.display='none';
-    body.innerHTML=
-      '<h2>Share this trip</h2><p class="lead">Create a trip to get a link your family can open. Anyone with the link can view and edit together.</p>'+
-      '<div class="field"><label for="t-name">Trip name</label><input type="text" id="t-name" value="Brody\'s Japan Trip"></div>'+
-      '<button class="btn btn-primary" id="t-create">Create trip</button>'+
-      '<div class="divider-or">or join an existing one</div>'+
-      '<div class="field"><label for="t-join">Trip code or link</label><input type="text" id="t-join" placeholder="Paste code or link"></div>'+
-      '<button class="btn btn-ghost" id="t-join-btn">Join trip</button>';
-    document.getElementById('t-create').addEventListener('click',createTrip);
-    document.getElementById('t-join-btn').addEventListener('click',()=>joinTrip(document.getElementById('t-join').value));
-    return;
-  }
-  closeX.style.display='flex';
   body.innerHTML=
-    '<h2>Trip shared</h2><p class="lead">Send this link to your family. Whoever opens it joins '+escapeHtml(tripName||'this trip')+' and edits the same plans live.</p>'+
+    '<h2>Shared with your family</h2><p class="lead">Anyone who opens this link sees and edits the same trip — flights, stay, plans, packing, everything — live.</p>'+
     '<div class="code-box"><div class="lbl">Trip link</div><div class="code">'+escapeHtml(tripLink())+'</div></div>'+
-    '<div class="sheet-actions"><button class="btn btn-ghost" id="t-copy-code">Copy code</button><button class="btn btn-primary" id="t-copy-link">Copy link</button></div>'+
-    '<div style="margin-top:14px"><button class="btn btn-primary" id="t-done">Done — go to trip</button></div>'+
-    '<div style="margin-top:10px"><button class="btn btn-danger" id="t-leave">Leave trip on this device</button></div>';
-  document.getElementById('t-copy-code').addEventListener('click',()=>copyText(tripCode,'Code copied'));
+    '<button class="btn btn-primary" id="t-copy-link">Copy link</button>'+
+    '<div style="margin-top:10px"><button class="btn btn-ghost" id="t-done">Done</button></div>';
   document.getElementById('t-copy-link').addEventListener('click',()=>copyText(tripLink(),'Link copied'));
   document.getElementById('t-done').addEventListener('click',closeTripSheet);
-  document.getElementById('t-leave').addEventListener('click',async()=>{ tripCode=null; await Local.set('tripCode',null); updateTripUI(); renderTripSheet(); await loadAll(); });
 }
 function copyText(txt,msg){
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>toast(msg)).catch(()=>toast('Copy failed')); }
   else { toast('Copy not available'); }
-}
-async function createTrip(){
-  const name=(document.getElementById('t-name').value||'Our Trip').trim();
-  const { data, error } = await supa.rpc('create_trip',{ p_name: name });
-  if(error){ toast('Could not create trip'); console.warn(error); return; }
-  tripCode=data; tripName=name; await Local.set('tripCode',tripCode);
-  updateTripUI(); await loadAll(); renderTripSheet(); toast('Trip created');
-}
-async function joinTrip(input){
-  let code=(input||'').trim();
-  const m=code.match(/trip=([0-9a-fA-F-]{36})/); if(m) code=m[1];
-  if(!/^[0-9a-fA-F-]{36}$/.test(code)){ toast('That code doesn\'t look right'); return; }
-  const { data, error } = await supa.rpc('get_trip',{ p_code: code });
-  if(error||data===null){ toast('Trip not found'); return; }
-  tripCode=code; tripName=data.name||''; await Local.set('tripCode',tripCode);
-  updateTripUI(); await loadAll(); closeTripSheet(); toast('Joined '+(tripName||'trip'));
 }
 function updateTripUI(){
   const btn=document.getElementById('trip-btn'), lbl=document.getElementById('trip-btn-label');
@@ -655,30 +827,408 @@ function updateTripUI(){
   if(mode==='local'){
     btn.classList.remove('live'); lbl.textContent='Sync';
     banner.classList.remove('hidden'); bt.textContent='Local only — plans stay on this device.'; bb.textContent='Why?';
-  } else if(!tripCode){
-    btn.classList.remove('live'); lbl.textContent='Share';
-    banner.classList.remove('hidden'); bt.textContent='Not connected to a trip yet.'; bb.textContent='Set up';
   } else {
     btn.classList.add('live'); lbl.textContent='Shared';
     banner.classList.add('hidden');
   }
 }
 
+// ---------- AI chat (free, via a small Cloudflare Worker — no key needed by anyone) ----------
+const CHAT_WORKER_URL = ""; // paste your deployed Worker URL here, e.g. https://tokyo-trip-ai.you.workers.dev
+let chatMessages=[], chatBusy=false;
+
+const CHAT_SUGGESTIONS=[
+  "How do I get from Asakusa to Shibuya?",
+  "What's the tipping etiquette in Japan?",
+  "Convert ¥2,000 to USD",
+  "Good vegetarian spots near Shibuya?",
+  "What IC card do we need for trains?",
+  "Typical taxi cost across central Tokyo?"
+];
+
+function sizeChatWrap(){
+  const scrollEl=document.querySelector('.scroll'); const wrap=document.querySelector('.chat-wrap');
+  if(!scrollEl||!wrap) return;
+  const cs=getComputedStyle(scrollEl);
+  const h=scrollEl.clientHeight-(parseFloat(cs.paddingTop)||0)-(parseFloat(cs.paddingBottom)||0);
+  wrap.style.height=Math.max(h,300)+'px';
+}
+window.addEventListener('resize',sizeChatWrap);
+
+function openKeySheet(){ document.getElementById('key-overlay').classList.add('open'); }
+function closeKeySheet(){ document.getElementById('key-overlay').classList.remove('open'); }
+document.getElementById('key-overlay').addEventListener('click',e=>{ if(e.target.id==='key-overlay') closeKeySheet(); });
+document.getElementById('key-sheet-x').addEventListener('click',closeKeySheet);
+
+function renderChatStatus(){
+  const row=document.getElementById('chat-status-row'); if(!row) return;
+  const ready=!!CHAT_WORKER_URL;
+  const statusTxt=ready?'🟢 AI assistant ready':'⚪ AI assistant not set up';
+  let links='<button class="chat-key-link" id="chat-key-btn">Info</button>';
+  if(chatMessages.length) links='<button class="chat-key-link" id="chat-clear-btn">Clear</button>'+links;
+  row.innerHTML='<span>'+statusTxt+'</span><span class="links">'+links+'</span>';
+  document.getElementById('chat-key-btn').addEventListener('click',openKeySheet);
+  const clearBtn=document.getElementById('chat-clear-btn');
+  if(clearBtn) clearBtn.addEventListener('click',async()=>{ chatMessages=[]; await Local.set('chatMessages',chatMessages); renderChat(); });
+}
+
+function renderChat(){
+  renderChatStatus();
+  const root=document.getElementById('chat-messages'); if(!root) return;
+  if(!chatMessages.length){
+    let html='<div class="chat-empty"><span class="big">🍣</span>Ask anything about getting around, food, money, or customs in Tokyo.</div>';
+    html+='<div class="chat-suggest-row">'+CHAT_SUGGESTIONS.map(s=>'<button class="chat-suggest-chip" data-q="'+escapeHtml(s)+'">'+escapeHtml(s)+'</button>').join('')+'</div>';
+    root.innerHTML=html;
+    root.querySelectorAll('.chat-suggest-chip').forEach(c=>c.addEventListener('click',()=>{ document.getElementById('chat-input').value=c.dataset.q; sendChat(); }));
+    return;
+  }
+  root.innerHTML=chatMessages.map(m=>'<div class="chat-bubble '+m.role+'">'+escapeHtml(m.content)+'</div>').join('')+
+    (chatBusy?'<div class="chat-bubble assistant"><div class="chat-typing"><span></span><span></span><span></span></div></div>':'');
+  root.scrollTop=root.scrollHeight;
+}
+
+function buildChatSystemPrompt(){
+  let ctx="You are a friendly, concise travel assistant helping a family of six during their trip to Tokyo, Japan, from June 22 to July 2, 2026. Keep answers short and practical for reading on a phone — a few sentences, plain language, no long lists unless asked. ";
+  if(stay&&(stay.addr||stay.name)) ctx+="They're staying near: "+(stay.addr||stay.name)+". ";
+  if(activities&&activities.length){
+    const named=activities.filter(a=>a.title).slice(0,6).map(a=>a.title).join(', ');
+    if(named) ctx+="Planned stops include: "+named+". ";
+  }
+  ctx+="For anything time-sensitive like live train status, exact current prices, or weather, give your best general knowledge and mention it may have changed.";
+  return ctx;
+}
+
+async function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const text=inp.value.trim();
+  if(!text||chatBusy) return;
+  if(!CHAT_WORKER_URL){
+    chatMessages.push({role:'user',content:text});
+    chatMessages.push({role:'assistant',content:"The AI assistant isn't connected yet — ask Brody to finish setting it up (tap Info above for details)."});
+    inp.value=''; await Local.set('chatMessages',chatMessages); renderChat();
+    return;
+  }
+  chatMessages.push({role:'user',content:text});
+  inp.value='';
+  chatBusy=true; renderChat();
+  await Local.set('chatMessages',chatMessages);
+  try{
+    const resp=await fetch(CHAT_WORKER_URL,{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        system:buildChatSystemPrompt(),
+        messages:chatMessages.map(m=>({role:m.role,content:m.content}))
+      })
+    });
+    const data=await resp.json();
+    if(data.error){
+      chatMessages.push({role:'assistant',content:'⚠️ '+data.error});
+    } else {
+      chatMessages.push({role:'assistant',content:data.reply||"Hmm, I didn't get a response — try asking again."});
+    }
+  } catch(e){
+    chatMessages.push({role:'assistant',content:"Couldn't reach the AI assistant. Check your internet connection and try again."});
+  }
+  chatBusy=false;
+  await Local.set('chatMessages',chatMessages);
+  renderChat();
+}
+document.getElementById('chat-send-btn').addEventListener('click',sendChat);
+document.getElementById('chat-input').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendChat(); } });
+
+// ---------- packing list (shared) ----------
+let packing=[];
+function renderPacking(){
+  const list=document.getElementById('pack-list'); if(!list) return;
+  const countEl=document.getElementById('pack-count');
+  if(countEl) countEl.textContent=packing.length?('('+packing.filter(p=>!p.checked).length+' left)'):'';
+  if(!packing.length){ list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:6px 0;">No items yet.</div>'; return; }
+  list.innerHTML=packing.map(p=>
+    '<div class="pack-row">'+
+      '<button class="pack-check'+(p.checked?' checked':'')+'" data-id="'+p.id+'">'+(p.checked?'✓':'')+'</button>'+
+      '<span class="pack-text'+(p.checked?' checked':'')+'">'+escapeHtml(p.text)+'</span>'+
+      '<button class="pack-del" data-id="'+p.id+'">&times;</button>'+
+    '</div>'
+  ).join('');
+  list.querySelectorAll('.pack-check').forEach(b=>b.addEventListener('click',()=>togglePackItem(b.dataset.id)));
+  list.querySelectorAll('.pack-del').forEach(b=>b.addEventListener('click',()=>deletePackItem(b.dataset.id)));
+}
+async function togglePackItem(id){ const item=packing.find(p=>p.id===id); if(!item) return; item.checked=!item.checked; await persistPacking(); }
+async function deletePackItem(id){ packing=packing.filter(p=>p.id!==id); await persistPacking(); }
+async function persistPacking(){
+  if(mode==='cloud' && supa && tripCode){
+    const { error } = await supa.rpc('save_packing',{ p_code: tripCode, p_packing: packing });
+    if(error){ toast('Save failed'); }
+  } else { await Local.set('packing',packing); }
+  renderPacking();
+}
+function openPackSheet(){ document.getElementById('pack-input').value=''; document.getElementById('pack-overlay').classList.add('open'); setTimeout(()=>document.getElementById('pack-input').focus(),200); }
+function closePackSheet(){ document.getElementById('pack-overlay').classList.remove('open'); }
+document.getElementById('pack-overlay').addEventListener('click',e=>{ if(e.target.id==='pack-overlay') closePackSheet(); });
+document.getElementById('pack-sheet-x').addEventListener('click',closePackSheet);
+document.getElementById('pack-add-open-btn').addEventListener('click',openPackSheet);
+document.getElementById('pack-add-btn').addEventListener('click',async()=>{
+  const v=document.getElementById('pack-input').value.trim(); if(!v) return;
+  packing.push({id:'p'+Date.now()+Math.random().toString(36).slice(2,6),text:v,checked:false});
+  closePackSheet(); await persistPacking();
+});
+document.getElementById('pack-input').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('pack-add-btn').click(); } });
+
+// ---------- family notes ----------
+let notes=[], selectedNoteAuthor=FAMILY[FAMILY.length-1];
+function fmtNoteTime(ts){ if(!ts) return ''; const d=new Date(ts); return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+function renderNotes(){
+  const list=document.getElementById('note-list'); if(!list) return;
+  const countEl=document.getElementById('note-count');
+  if(countEl) countEl.textContent=notes.length?('('+notes.length+')'):'';
+  if(!notes.length){ list.innerHTML='<div style="font-size:13px;color:var(--muted);padding:6px 0;">No notes yet.</div>'; return; }
+  const sorted=[...notes].sort((a,b)=>(b.ts||0)-(a.ts||0));
+  list.innerHTML=sorted.map(n=>
+    '<div class="note-row">'+
+      '<div class="note-top"><span class="note-author">'+escapeHtml(n.author||'Someone')+'</span><span class="note-time">'+fmtNoteTime(n.ts)+'</span></div>'+
+      '<div class="note-text">'+escapeHtml(n.text)+'</div>'+
+      '<button class="note-del" data-id="'+n.id+'">Remove</button>'+
+    '</div>'
+  ).join('');
+  list.querySelectorAll('.note-del').forEach(b=>b.addEventListener('click',()=>deleteNote(b.dataset.id)));
+}
+async function deleteNote(id){ notes=notes.filter(n=>n.id!==id); await persistNotes(); }
+async function persistNotes(){
+  if(mode==='cloud' && supa && tripCode){
+    const { error } = await supa.rpc('save_notes',{ p_code: tripCode, p_notes: notes });
+    if(error){ toast('Save failed'); }
+  } else { await Local.set('notes',notes); }
+  renderNotes();
+}
+function renderNoteAuthorChips(){
+  const wrap=document.getElementById('note-author-chips'); if(!wrap) return; wrap.innerHTML='';
+  FAMILY.forEach(name=>{
+    const chip=document.createElement('button');
+    chip.className='cat-chip'+(name===selectedNoteAuthor?' sel':'');
+    chip.textContent=name;
+    chip.addEventListener('click',()=>{ selectedNoteAuthor=name; renderNoteAuthorChips(); });
+    wrap.appendChild(chip);
+  });
+}
+function openNoteSheet(){ document.getElementById('note-input').value=''; renderNoteAuthorChips(); document.getElementById('note-overlay').classList.add('open'); }
+function closeNoteSheet(){ document.getElementById('note-overlay').classList.remove('open'); }
+document.getElementById('note-overlay').addEventListener('click',e=>{ if(e.target.id==='note-overlay') closeNoteSheet(); });
+document.getElementById('note-sheet-x').addEventListener('click',closeNoteSheet);
+document.getElementById('note-add-open-btn').addEventListener('click',openNoteSheet);
+document.getElementById('note-post-btn').addEventListener('click',async()=>{
+  const v=document.getElementById('note-input').value.trim(); if(!v) return;
+  notes.push({id:'n'+Date.now()+Math.random().toString(36).slice(2,6),author:selectedNoteAuthor,text:v,ts:Date.now()});
+  await Local.set('lastNoteAuthor',selectedNoteAuthor);
+  closeNoteSheet(); await persistNotes();
+});
+
+// ---------- emergency info ----------
+let emergency=null;
+function renderEmergency(){
+  const body=document.getElementById('emg-body'); if(!body) return;
+  const e=emergency||{};
+  let html='<div class="info-card">'+
+    '<div class="info-row"><span class="label">Police</span><span class="value">110</span></div>'+
+    '<div class="info-row"><span class="label">Ambulance / Fire</span><span class="value">119</span></div>'+
+    '<div class="info-row"><span class="label">Japan Visitor Hotline</span><span class="value">050-3816-2787</span></div>'+
+    '</div>'+
+    '<div class="info-card">'+
+    '<div class="info-row"><span class="label">US Embassy Tokyo</span><span class="value">1-10-5 Akasaka, Minato City</span></div>'+
+    '<div class="info-row"><span class="label">Embassy phone</span><span class="value">03-3224-5000</span></div>'+
+    '</div>';
+  if(e.provider||e.policy||e.phone||e.notes){
+    html+='<div class="info-card">';
+    if(e.provider) html+='<div class="info-row"><span class="label">Insurance</span><span class="value">'+escapeHtml(e.provider)+'</span></div>';
+    if(e.policy) html+='<div class="info-row"><span class="label">Policy #</span><span class="value">'+escapeHtml(e.policy)+'</span></div>';
+    if(e.phone) html+='<div class="info-row"><span class="label">Insurance phone</span><span class="value">'+escapeHtml(e.phone)+'</span></div>';
+    html+='</div>';
+    if(e.notes) html+='<div style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:10px;">'+escapeHtml(e.notes)+'</div>';
+  }
+  html+='<button class="btn btn-ghost" id="emg-edit-btn">'+((e.provider||e.policy||e.phone||e.notes)?'Edit insurance info':'+ Add insurance info')+'</button>';
+  body.innerHTML=html;
+  document.getElementById('emg-edit-btn').addEventListener('click',openEmgSheet);
+}
+function openEmgSheet(){
+  const e=emergency||{};
+  document.getElementById('emg-provider').value=e.provider||'';
+  document.getElementById('emg-policy').value=e.policy||'';
+  document.getElementById('emg-phone').value=e.phone||'';
+  document.getElementById('emg-notes').value=e.notes||'';
+  document.getElementById('emg-overlay').classList.add('open');
+}
+function closeEmgSheet(){ document.getElementById('emg-overlay').classList.remove('open'); }
+document.getElementById('emg-overlay').addEventListener('click',e=>{ if(e.target.id==='emg-overlay') closeEmgSheet(); });
+document.getElementById('emg-sheet-x').addEventListener('click',closeEmgSheet);
+document.getElementById('emg-save-btn').addEventListener('click',async()=>{
+  emergency={
+    provider:document.getElementById('emg-provider').value.trim(),
+    policy:document.getElementById('emg-policy').value.trim(),
+    phone:document.getElementById('emg-phone').value.trim(),
+    notes:document.getElementById('emg-notes').value.trim()
+  };
+  closeEmgSheet();
+  if(mode==='cloud' && supa && tripCode){
+    const { error } = await supa.rpc('save_emergency',{ p_code: tripCode, p_emergency: emergency });
+    if(error){ toast('Save failed'); }
+  } else { await Local.set('emergency',emergency); }
+  renderEmergency();
+});
+
+// ---------- currency & phrasebook ----------
+const JPY_PER_USD=161; // approx, June 2026 — fluctuates daily, use for ballpark only
+function wireCurrencyConverter(){
+  const curJpy=document.getElementById('cur-jpy'), curUsd=document.getElementById('cur-usd');
+  if(!curJpy||!curUsd) return;
+  let lock=false;
+  curJpy.addEventListener('input',()=>{ if(lock) return; lock=true; const v=parseFloat(curJpy.value); curUsd.value=isNaN(v)?'':(v/JPY_PER_USD).toFixed(2); lock=false; });
+  curUsd.addEventListener('input',()=>{ if(lock) return; lock=true; const v=parseFloat(curUsd.value); curJpy.value=isNaN(v)?'':Math.round(v*JPY_PER_USD); lock=false; });
+}
+const PHRASES=[
+  {jp:'こんにちは',romaji:'Konnichiwa',en:'Hello'},
+  {jp:'ありがとうございます',romaji:'Arigatou gozaimasu',en:'Thank you'},
+  {jp:'すみません',romaji:'Sumimasen',en:'Excuse me / sorry'},
+  {jp:'いくらですか？',romaji:'Ikura desu ka?',en:'How much is this?'},
+  {jp:'トイレはどこですか？',romaji:'Toire wa doko desu ka?',en:'Where is the bathroom?'},
+  {jp:'英語を話せますか？',romaji:'Eigo wo hanasemasu ka?',en:'Do you speak English?'},
+  {jp:'お会計お願いします',romaji:'Okaikei onegaishimasu',en:'Check, please'},
+  {jp:'これは何ですか？',romaji:'Kore wa nan desu ka?',en:'What is this?'},
+  {jp:'おいしい',romaji:'Oishii',en:'Delicious'},
+  {jp:'乾杯',romaji:'Kanpai',en:'Cheers!'},
+  {jp:'駅はどこですか？',romaji:'Eki wa doko desu ka?',en:'Where is the station?'},
+  {jp:'助けてください',romaji:'Tasukete kudasai',en:'Please help me'},
+  {jp:'はい / いいえ',romaji:'Hai / Iie',en:'Yes / No'},
+  {jp:'大丈夫です',romaji:'Daijoubu desu',en:"It's okay / I'm fine"}
+];
+function renderPhrasebook(){
+  const body=document.getElementById('phrase-body'); if(!body) return;
+  body.innerHTML=PHRASES.map(p=>'<div class="phrase-row"><div class="phrase-jp">'+p.jp+'</div><div class="phrase-romaji">'+p.romaji+'</div><div class="phrase-en">'+p.en+'</div></div>').join('');
+}
+
+// ---------- universal search ----------
+function openDetailsBySummary(snippet){
+  document.querySelectorAll('#view-more details').forEach(d=>{
+    const s=d.querySelector('summary');
+    if(s && s.textContent.includes(snippet)){
+      d.open=true;
+      setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'start'}),350);
+    }
+  });
+}
+
+function buildSearchIndex(){
+  const idx=[];
+
+  idx.push({group:'Flights',icon:'✈️',title:'Outbound — Newark to Narita',sub:'NH 6453 · Mon Jun 22 · 11:40 AM',
+    match:'newark ewr narita nrt nh6453 nh 6453 united outbound flight ticket 2052429502322 vhx47so2 terminal c terminal 1 51j',
+    action:()=>switchTab('flights')});
+  idx.push({group:'Flights',icon:'✈️',title:'Return — Haneda to New York',sub:'NH 110 · Thu Jul 2 · 10:50 AM',
+    match:'haneda hnd jfk new york nh110 nh 110 ana return flight skx21so2 terminal 2 terminal 7 39d',
+    action:()=>switchTab('flights')});
+
+  if(stay && stay.name){
+    idx.push({group:'Stay',icon:'🏠',title:stay.name,sub:stay.addr||'Your stay',
+      match:[stay.name,stay.addr,stay.host,stay.wifi,stay.notes,stay.conf].filter(Boolean).join(' '),
+      action:()=>switchTab('stay')});
+  }
+
+  activities.forEach(a=>{
+    idx.push({group:'Plan',icon:catIcon(a.cat),title:a.title,
+      sub:[a.date?fmtDate(a.date):null,a.addr].filter(Boolean).join(' · ')||catLabel(a.cat),
+      match:[a.title,a.addr,a.notes,catLabel(a.cat),(a.attendees||[]).join(' '),a.date?fmtDate(a.date):''].filter(Boolean).join(' '),
+      action:()=>{ switchTab('plan'); openPlanSheet(a); }});
+  });
+
+  const addedTitles=activities.map(a=>(a.title||'').toLowerCase());
+  IDEAS.forEach(idea=>{
+    if(addedTitles.includes(idea.title.toLowerCase())) return;
+    idx.push({group:'Tokyo Ideas',icon:catIcon(idea.cat),title:idea.title,sub:'Not yet added · tap to add',
+      match:[idea.title,idea.addr,idea.notes,catLabel(idea.cat)].filter(Boolean).join(' '),
+      action:()=>{ switchTab('plan'); openPlanSheet(null,idea); }});
+  });
+
+  packing.forEach(p=>{
+    idx.push({group:'Packing',icon:'🧳',title:p.text,sub:p.checked?'Packed':'Not packed yet',
+      match:p.text,
+      action:()=>{ switchTab('more'); openDetailsBySummary('Packing list'); }});
+  });
+
+  notes.forEach(n=>{
+    idx.push({group:'Family notes',icon:'📝',title:n.text,sub:'From '+(n.author||'Someone'),
+      match:[n.text,n.author].filter(Boolean).join(' '),
+      action:()=>{ switchTab('more'); openDetailsBySummary('Family notes'); }});
+  });
+
+  const e=emergency||{};
+  idx.push({group:'Emergency',icon:'🆘',title:'Emergency info',sub:'Police, embassy, insurance',
+    match:['police 110 ambulance fire 119 japan visitor hotline embassy emergency insurance allergy medication blood type',e.provider,e.policy,e.notes].filter(Boolean).join(' '),
+    action:()=>{ switchTab('more'); openDetailsBySummary('Emergency info'); }});
+
+  idx.push({group:'Tools',icon:'💴',title:'Currency & tipping',sub:'Yen/dollar converter, tipping norms',
+    match:'currency yen dollar convert exchange rate tip tipping money',
+    action:()=>{ switchTab('more'); openDetailsBySummary('Currency'); }});
+
+  PHRASES.forEach(p=>{
+    idx.push({group:'Phrasebook',icon:'🗣️',title:p.en,sub:p.romaji,
+      match:[p.en,p.romaji,p.jp].filter(Boolean).join(' '),
+      action:()=>{ switchTab('more'); openDetailsBySummary('Phrasebook'); }});
+  });
+
+  return idx;
+}
+
+function renderSearchResults(query){
+  const root=document.getElementById('search-results'); if(!root) return;
+  const q=query.trim().toLowerCase();
+  root.innerHTML='';
+  if(!q){
+    root.innerHTML='<div class="search-empty">Search flights, your stay, plans, packing, notes, phrases — anything in this trip.<br><br>Try a neighborhood name, a phrase, or something you half-remember.</div>';
+    return;
+  }
+  const results=buildSearchIndex().filter(r=>r.match.toLowerCase().includes(q));
+  if(!results.length){
+    root.innerHTML='<div class="search-empty">No matches for "'+escapeHtml(query)+'".</div>';
+    return;
+  }
+  let lastGroup=null;
+  results.forEach(r=>{
+    if(r.group!==lastGroup){
+      const label=document.createElement('div'); label.className='search-group-label'; label.textContent=r.group;
+      root.appendChild(label); lastGroup=r.group;
+    }
+    const row=document.createElement('div'); row.className='search-result-row';
+    row.innerHTML='<span class="sr-icon">'+r.icon+'</span><div class="sr-body"><div class="sr-title">'+escapeHtml(r.title)+'</div><div class="sr-sub">'+escapeHtml(r.sub)+'</div></div><span class="sr-arrow">→</span>';
+    row.addEventListener('click',()=>{ closeSearch(); r.action(); });
+    root.appendChild(row);
+  });
+}
+
+function openSearch(){
+  document.getElementById('search-overlay').classList.add('open');
+  const inp=document.getElementById('search-input');
+  inp.value=''; renderSearchResults('');
+  setTimeout(()=>inp.focus(),200);
+}
+function closeSearch(){ document.getElementById('search-overlay').classList.remove('open'); }
+document.getElementById('search-open-btn').addEventListener('click',openSearch);
+document.getElementById('search-close-btn').addEventListener('click',closeSearch);
+document.getElementById('search-input').addEventListener('input',e=>renderSearchResults(e.target.value));
+document.getElementById('search-input').addEventListener('keydown',e=>{ if(e.key==='Escape') closeSearch(); });
+
 // ---------- init ----------
 async function init(){
   renderIdeas(); renderCatChips();
+  chatMessages=(await Local.get('chatMessages'))||[];
+  selectedNoteAuthor=(await Local.get('lastNoteAuthor'))||FAMILY[FAMILY.length-1];
+  renderChat(); renderPhrasebook(); wireCurrencyConverter();
   if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase){
     try{ supa=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); mode='cloud'; }
     catch(e){ console.warn('supabase init failed',e); mode='local'; }
   }
-  if(mode==='cloud'){
-    const urlCode=new URLSearchParams(location.search).get('trip');
-    tripCode = urlCode || (await Local.get('tripCode')) || null;
-    if(tripCode) await Local.set('tripCode',tripCode);
-  }
+  if(mode==='cloud'){ tripCode = TRIP_CODE; }
   updateTripUI();
   await loadAll();
-  if(mode==='cloud' && !tripCode) openTripSheet();
+  sizeChatWrap();
   // live refresh while the tab is visible
   setInterval(()=>{ if(mode==='cloud' && tripCode && document.visibilityState==='visible') loadAll(); }, 7000);
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && mode==='cloud' && tripCode) loadAll(); });
