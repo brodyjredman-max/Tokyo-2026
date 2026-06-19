@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Tokyo Trip · Jun 22 – Jul 2</title>
+<title>Redman Tokyo Trip 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13,7 +13,18 @@
   html,body{height:100%;}
   body{background:var(--bg);color:var(--paper);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;}
   @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
-  #app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative;}
+  #app{max-width:480px;margin:0 auto;height:100%;display:none;flex-direction:column;position:relative;}
+  .gate-screen{position:fixed;inset:0;background:var(--bg);z-index:100;display:none;align-items:center;justify-content:center;padding:24px;}
+  #lock-screen{display:flex;}
+  .lock-card{max-width:320px;width:100%;text-align:center;}
+  .lock-eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px;}
+  .lock-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:10px;color:var(--paper);}
+  .lock-sub{font-size:14px;color:var(--muted);margin-bottom:22px;line-height:1.5;}
+  #lock-input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--paper);font-family:'Inter',sans-serif;font-size:16px;padding:14px 16px;text-align:center;letter-spacing:0.04em;box-sizing:border-box;}
+  #lock-input:focus{outline:2px solid var(--accent-line);border-color:var(--accent);}
+  .lock-error{color:var(--accent);font-size:13px;margin-top:10px;display:none;}
+  .lock-error.show{display:block;}
+  #whoami-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
   .topbar{flex:0 0 auto;padding:18px 18px 12px;border-bottom:1px solid var(--line);background:var(--bg);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
   .topbar .eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:5px;}
   .topbar h1{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700;letter-spacing:-0.01em;}
@@ -94,6 +105,12 @@
   .mini-link{flex:1;text-align:center;text-decoration:none;font-size:13px;font-weight:600;padding:11px;border-radius:10px;background:var(--accent-tint);color:var(--accent);border:1px solid var(--accent-line);}
   .stay-notes{font-size:13px;color:#5C6068;line-height:1.5;margin-top:10px;padding-top:12px;border-top:1px solid rgba(20,22,29,0.1);}
   .plan-summary{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:16px;}
+  .plan-filter-row{display:none;gap:8px;margin-bottom:16px;}
+  .plan-filter-row.show{display:flex;}
+  .filter-pill{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 0;text-align:center;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;}
+  .filter-pill.active{background:var(--accent-tint);border-color:var(--accent);color:var(--paper);}
+  .addme-btn{margin-top:9px;background:none;border:none;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;padding:2px 0;display:none;}
+  .addme-btn.show{display:inline-block;}
   .plan-summary .s-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
   .plan-summary .s-total{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--paper);}
   .ideas{margin-bottom:20px;}
@@ -128,6 +145,23 @@
   .mp-sub{font-size:11px;color:var(--muted);margin-top:2px;}
   .mp-open{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;padding:6px 10px;border-radius:8px;background:var(--accent-tint);border:1px solid var(--accent-line);}
   .map-route-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5;}
+  .whoami-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-top:16px;padding-top:14px;border-top:1px solid var(--line);}
+  .whoami-row strong{color:var(--paper);}
+  .family-flight-group{margin-bottom:14px;}
+  .ff-group-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);font-weight:600;margin-bottom:8px;}
+  .ff-row{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:7px;gap:10px;}
+  .ff-name{font-size:13px;font-weight:700;color:var(--paper);flex:0 0 auto;min-width:88px;}
+  .ff-route{font-size:12px;color:var(--muted);flex:1;}
+  .ff-meta{font-size:10.5px;color:var(--muted-dim);text-align:right;flex:0 0 auto;line-height:1.4;}
+  .nb-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .nb-row:last-child{border-bottom:none;}
+  .nb-name{font-size:14px;font-weight:600;color:var(--paper);flex:0 0 auto;min-width:90px;}
+  .nb-line{font-size:11px;color:var(--accent);flex:0 0 auto;}
+  .nb-note{font-size:12px;color:var(--muted);flex:1 1 100%;margin-top:1px;}
+  .tid-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);}
+  .tid-row:last-child{border-bottom:none;}
+  .tid-name{font-size:14px;font-weight:600;color:var(--paper);}
+  .tid-vals{font-size:12px;color:var(--muted);text-align:right;}
   .chat-wrap{display:flex;flex-direction:column;min-height:320px;}
   .chat-status-row{display:flex;align-items:center;justify-content:space-between;padding:2px 2px 12px;font-size:12px;color:var(--muted);flex:0 0 auto;gap:10px;}
   .chat-status-row .links{display:flex;gap:14px;flex-shrink:0;}
@@ -231,11 +265,30 @@
 </style>
 </head>
 <body>
+<div id="lock-screen" class="gate-screen">
+  <div class="lock-card">
+    <div class="lock-eyebrow">Tokyo · 東京</div>
+    <h1 class="lock-title">Redman Tokyo Trip 2026</h1>
+    <p class="lock-sub">Enter the trip passcode to continue.</p>
+    <input type="password" id="lock-input" placeholder="Passcode" autocomplete="off" inputmode="numeric">
+    <div class="lock-error" id="lock-error">That's not quite right — try again.</div>
+    <button class="btn btn-primary" id="lock-unlock-btn" style="margin-top:14px;">Unlock</button>
+  </div>
+</div>
+<div id="whoami-screen" class="gate-screen">
+  <div class="lock-card">
+    <div class="lock-eyebrow">Tokyo · 東京</div>
+    <h1 class="lock-title">Who's this?</h1>
+    <p class="lock-sub">Pick your name so the app can personalize a few small things for you. You can change this anytime.</p>
+    <div class="cat-chips" id="whoami-chips"></div>
+    <button class="btn btn-ghost" id="whoami-skip-btn" style="margin-top:18px;">Skip for now</button>
+  </div>
+</div>
 <div id="app">
   <div class="topbar">
     <div>
-      <div class="eyebrow">Tokyo · 東京</div>
-      <h1>Brody's Japan Trip</h1>
+      <div class="eyebrow" id="topbar-eyebrow">Tokyo · 東京</div>
+      <h1>Redman Tokyo Trip 2026</h1>
       <div class="sub">Jun 22 – Jul 2, 2026 · Reservation DHSC6C</div>
     </div>
     <div class="topbar-actions">
@@ -298,6 +351,23 @@
           </div>
         </div>
       </div>
+      <div class="section-head">Family Flights</div>
+      <div class="family-flight-group">
+        <div class="ff-group-label">Outbound · Mon, Jun 22</div>
+        <div class="ff-row"><div class="ff-name">Kirk, Amy, Mace</div><div class="ff-route">ORD → NRT · 11:50 AM</div><div class="ff-meta">ANA NH011<br>DH8HN7</div></div>
+        <div class="ff-row"><div class="ff-name">Drake</div><div class="ff-route">ORD → NRT · 11:50 AM</div><div class="ff-meta">ANA NH011<br>DHJXR7</div></div>
+        <div class="ff-row"><div class="ff-name">Brock</div><div class="ff-route">ORD → NRT · 11:50 AM</div><div class="ff-meta">ANA NH011<br>DHNFC6</div></div>
+        <div class="ff-row"><div class="ff-name">Brody</div><div class="ff-route">EWR → NRT · 11:40 AM</div><div class="ff-meta">UA/NH6453<br>DHSC6C</div></div>
+      </div>
+      <div class="family-flight-group">
+        <div class="ff-group-label">Return</div>
+        <div class="ff-row"><div class="ff-name">Drake</div><div class="ff-route">HND → ORD · Mon Jun 29, 10:40 AM</div><div class="ff-meta">ANA NH112<br>DHJXR7</div></div>
+        <div class="ff-row"><div class="ff-name">Kirk, Amy, Mace</div><div class="ff-route">HND → ORD · Thu Jul 2, 10:40 AM</div><div class="ff-meta">ANA NH112<br>DH8HN7</div></div>
+        <div class="ff-row"><div class="ff-name">Brody</div><div class="ff-route">HND → JFK · Thu Jul 2, 10:50 AM</div><div class="ff-meta">ANA NH110<br>DHSC6C</div></div>
+        <div class="ff-row"><div class="ff-name">Brock</div><div class="ff-route">Still TBD</div><div class="ff-meta">Not yet booked</div></div>
+      </div>
+      <div class="map-route-note">Note: Drake flies home early (Jun 29). Brock's return isn't booked yet. ANA bookings list middle names — Brody appears as "JosephBroderson", Kirk as "KirkDwayne" when checking in online.</div>
+
       <div class="section-head">Good to Know</div>
       <div class="info-card">
         <div class="info-row"><span class="label">Ticket number</span><span class="value">2052429502322</span></div>
@@ -314,6 +384,10 @@
     <section class="view" id="view-stay"><div id="stay-content"></div></section>
     <section class="view" id="view-plan">
       <div class="plan-summary"><span class="s-label">Planned spend</span><span class="s-total" id="plan-total">—</span></div>
+      <div class="plan-filter-row" id="plan-filter-row">
+        <button class="filter-pill active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="mine">Just mine</button>
+      </div>
       <div class="ideas">
         <div class="section-head first">Tokyo Ideas · tap to add</div>
         <div class="ideas-scroll" id="ideas-scroll"></div>
@@ -373,6 +447,38 @@
       <details>
         <summary>🗣️ Phrasebook</summary>
         <div class="details-body" id="phrase-body"></div>
+      </details>
+
+      <details>
+        <summary>🧭 Neighborhoods</summary>
+        <div class="details-body">
+          <div class="nb-row"><div class="nb-name">Shinjuku</div><div class="nb-line">JR Yamanote Line</div><div class="nb-note">Home base + nightlife hub</div></div>
+          <div class="nb-row"><div class="nb-name">Shibuya</div><div class="nb-line">JR Yamanote Line</div><div class="nb-note">Shopping, Shibuya Crossing, Shibuya Sky</div></div>
+          <div class="nb-row"><div class="nb-name">Harajuku</div><div class="nb-line">JR Yamanote Line</div><div class="nb-note">Meiji Shrine + youth fashion streets</div></div>
+          <div class="nb-row"><div class="nb-name">Roppongi</div><div class="nb-line">Tokyo Metro Hibiya Line</div><div class="nb-note">teamLab Borderless + modern art</div></div>
+          <div class="nb-row"><div class="nb-name">Asakusa</div><div class="nb-line">Tokyo Metro Ginza Line</div><div class="nb-note">Senso-ji + traditional streets</div></div>
+          <div class="nb-row"><div class="nb-name">Akihabara</div><div class="nb-line">JR Yamanote Line</div><div class="nb-note">Electronics + arcades</div></div>
+          <div class="nb-row"><div class="nb-name">Ginza</div><div class="nb-line">Tokyo Metro Ginza Line</div><div class="nb-note">Upscale shopping + Art Aquarium</div></div>
+          <div class="nb-row"><div class="nb-name">Ueno</div><div class="nb-line">JR Yamanote Line</div><div class="nb-note">Park + museums + zoo</div></div>
+          <div class="nb-row"><div class="nb-name">Tokyo Station</div><div class="nb-line">JR Lines + Shinkansen</div><div class="nb-note">Major bullet train hub</div></div>
+          <div class="nb-row"><div class="nb-name">Hakone</div><div class="nb-line">Shinkansen via Odawara</div><div class="nb-note">Mt. Fuji day trip area</div></div>
+          <div class="nb-row"><div class="nb-name">Nikko</div><div class="nb-line">Shinkansen via Utsunomiya</div><div class="nb-note">Shrines + mountain scenery</div></div>
+          <div class="nb-row"><div class="nb-name">Kyoto</div><div class="nb-line">Tokaido Shinkansen</div><div class="nb-note">Historic temples + cultural capital</div></div>
+          <div class="map-route-note" style="margin-top:12px;">Haneda → Shinjuku: ~1hr train, ~30min car. Narita → Shinjuku: ~2hr train, ~1hr car.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🪪 Travel IDs</summary>
+        <div class="details-body">
+          <div class="tid-row"><div class="tid-name">Joseph (Brody)</div><div class="tid-vals">FF 4143835357 · TSA 150551744</div></div>
+          <div class="tid-row"><div class="tid-name">Kirk</div><div class="tid-vals">FF 4143727443 · TSA 985090777</div></div>
+          <div class="tid-row"><div class="tid-name">Brock</div><div class="tid-vals">FF 4143172715 · TSA 164195493</div></div>
+          <div class="tid-row"><div class="tid-name">Amy</div><div class="tid-vals">Not on file</div></div>
+          <div class="tid-row"><div class="tid-name">Drake</div><div class="tid-vals">Not on file</div></div>
+          <div class="tid-row"><div class="tid-name">Mace</div><div class="tid-vals">Not on file</div></div>
+          <div class="map-route-note" style="margin-top:10px;">FF = ANA Frequent Flyer number, TSA = Global Entry/TSA PreCheck number.</div>
+        </div>
       </details>
     </section>
   </div>
@@ -447,7 +553,7 @@
     <div class="field"><label for="f-title">What is it?</label><input type="text" id="f-title" placeholder="e.g. Senso-ji Temple"></div>
     <div class="field"><label>Category</label><div class="cat-chips" id="cat-chips"></div></div>
     <div class="field"><label for="f-addr">Address (optional)</label><input type="text" id="f-addr" placeholder="e.g. 2-3-1 Asakusa, Taito City, Tokyo"></div>
-    <div class="field"><label>Who's coming? (optional)</label><div class="cat-chips" id="attendee-chips"></div></div>
+    <div class="field"><label>Who's coming? (optional)</label><div class="cat-chips" id="attendee-chips"></div><button class="addme-btn" id="addme-btn" type="button"></button></div>
     <div class="two-col">
       <div class="field"><label for="f-date">Date</label><input type="date" id="f-date" min="2026-06-22" max="2026-07-02"></div>
       <div class="field"><label for="f-time">Time</label><input type="time" id="f-time"></div>
@@ -500,16 +606,17 @@
 const SUPABASE_URL = "https://pnexpwqoyxnvpqkszeut.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuZXhwd3FveXhudnBxa3N6ZXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NzY3MTYsImV4cCI6MjA5NzQ1MjcxNn0.hGuE683Xs22BI1bVyk2UCTf7XeyaQXT_YGMy-E6PfKQ";
 const TRIP_CODE = "9790117c-7359-4a98-ad5e-3f2f1836b6c7"; // the one trip this app always connects to — no setup needed
+const LOCAL_FALLBACK_PASSCODE = "8888"; // ONLY used if Supabase isn't configured (no shared backend to check against). The real passcode lives in the database, not here.
 // ========================================================================
 
 // ---- local per-device storage (remembers which trip this device joined) ----
-const mem = {};
 const Local = {
-  async get(k){ try{ const r=await window.storage.get(k,false); if(r&&r.value!=null) return JSON.parse(r.value); return (k in mem)?mem[k]:null; }catch(e){ return (k in mem)?mem[k]:null; } },
-  async set(k,v){ mem[k]=v; try{ await window.storage.set(k,JSON.stringify(v),false); }catch(e){} }
+  async get(k){ try{ const v=localStorage.getItem('tokyotrip_'+k); return v!=null?JSON.parse(v):null; }catch(e){ return null; } },
+  async set(k,v){ try{ localStorage.setItem('tokyotrip_'+k,JSON.stringify(v)); }catch(e){} }
 };
 
-let supa = null, mode = 'local', tripCode = null, tripName = '';
+let supa = null, mode = 'local', tripCode = null, tripName = '', myPasscode = null;
+let myName = null, appStarted = false, planFilterMine = false;
 let activities = [], stay = null, selectedCat = 'sightseeing';
 
 const CATS = { sightseeing:'🏯 Sightseeing', food:'🍜 Food & drink', shopping:'🛍️ Shopping', nightlife:'🌃 Nightlife', nature:'🌸 Nature', other:'📍 Other' };
@@ -531,7 +638,13 @@ const IDEAS = [
   {title:'Ueno Park & museums',cat:'sightseeing',addr:'5-20 Uenokoen, Taito City, Tokyo 110-0007',notes:"Big park with Tokyo National Museum, the zoo, and a pond. Cherry blossoms in spring, but pleasant any season. 5 min from Ueno Station."},
   {title:'Tokyo Tower',cat:'sightseeing',addr:'4-2-8 Shibakoen, Minato City, Tokyo 105-0011',notes:"The original Tokyo tower, lit red and white at night. Slightly less crowded than Skytree, with skyline views toward Mt. Fuji on clear days."},
   {title:'Imperial Palace East Gardens',cat:'nature',addr:'1-1 Chiyoda, Chiyoda City, Tokyo 100-0001',notes:"Free public gardens on the old castle grounds. Closed Mondays and Fridays. Peaceful, with old stone foundations still visible."},
-  {title:'Harajuku Takeshita Street',cat:'shopping',addr:'1-19 Jingumae, Shibuya City, Tokyo 150-0001',notes:"Quirky fashion, crepes, and youth culture. Gets packed on weekends — go on a weekday morning if you want breathing room."}
+  {title:'Harajuku Takeshita Street',cat:'shopping',addr:'1-19 Jingumae, Shibuya City, Tokyo 150-0001',notes:"Quirky fashion, crepes, and youth culture. Gets packed on weekends — go on a weekday morning if you want breathing room."},
+  {title:'Omoide Yokocho',cat:'food',addr:'1-2 Nishishinjuku, Shinjuku City, Tokyo 160-0023',notes:"\"Memory Lane\" — a narrow alley of tiny yakitori and ramen stalls right by Shinjuku Station's west side. Stalls open around 5pm; arrive early for a seat."},
+  {title:'3D Cat Billboard',cat:'sightseeing',addr:'3-23-18 Shinjuku, Shinjuku City, Tokyo 160-0022',notes:"The giant animated calico cat on Cross Shinjuku Vision, at Shinjuku Station's east exit. Free to view, runs throughout the day — best after dark."},
+  {title:'Art Aquarium Museum',cat:'sightseeing',addr:'Ginza Mitsukoshi, 4-6-16 Ginza, Chuo City, Tokyo 104-0061',notes:"Goldfish displayed as art, with light and sound. Inside the Ginza Mitsukoshi department store — buy tickets there or online ahead."},
+  {title:'Sumida River Water Bus',cat:'sightseeing',addr:'Asakusa Pier, near Azumabashi Bridge, Taito City, Tokyo',notes:"Scenic cruise from Asakusa toward Odaiba or Hama-rikyu Gardens. Pier is a 1–3 min walk from Asakusa Station — easy to pair with Senso-ji."},
+  {title:'Nissan Crossing',cat:'sightseeing',addr:'5-8-1 Ginza, Chuo City, Tokyo 104-0061',notes:"Free Nissan showroom and concept cars at the Ginza 4-chome crossing — note: this is in Ginza, not Shinjuku. Crossing Café does novelty latte art."},
+  {title:'NINJA TOKYO',cat:'food',addr:'Shinjuku, Tokyo (confirm exact branch before booking)',notes:"Ninja-themed dinner with table magic. Several similarly-named Ninja restaurants exist around Tokyo (Shinjuku, Akasaka, Otemachi) — double check which one your reservation is at."}
 ];
 
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
@@ -546,6 +659,13 @@ function switchTab(name){
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click',()=>switchTab(t.dataset.tab));
 });
+document.querySelectorAll('.filter-pill').forEach(b=>{
+  b.addEventListener('click',()=>{
+    planFilterMine=b.dataset.filter==='mine';
+    document.querySelectorAll('.filter-pill').forEach(x=>x.classList.toggle('active',x===b));
+    renderPlan();
+  });
+});
 
 // ---------- formatting ----------
 function fmtMoney(a,cur){ const n=Number(a); if(cur==='USD') return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); return '¥'+Math.round(n).toLocaleString('en-US'); }
@@ -556,7 +676,7 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<'
 // ---------- data layer (branches on mode) ----------
 async function loadAll(){
   if(mode==='cloud' && supa && tripCode){
-    const { data, error } = await supa.rpc('get_trip',{ p_code: tripCode });
+    const { data, error } = await supa.rpc('get_trip',{ p_code: tripCode, p_passcode: myPasscode });
     if(error){ console.warn('get_trip',error); toast('Could not load trip data'); return; }
     if(data===null){ console.warn('Trip code not found in database:',tripCode); toast('Trip data unavailable'); return; }
     tripName=data.name||''; activities=data.activities||[]; stay=data.stay||null;
@@ -569,7 +689,7 @@ async function loadAll(){
 }
 async function persistActivity(rec){
   if(mode==='cloud' && supa && tripCode){
-    const { error } = await supa.rpc('upsert_activity',{ p_code: tripCode, p_activity: rec });
+    const { error } = await supa.rpc('upsert_activity',{ p_code: tripCode, p_passcode: myPasscode, p_activity: rec });
     if(error){ toast('Save failed'); console.warn(error); return; }
     await loadAll();
   } else {
@@ -581,7 +701,7 @@ async function persistActivity(rec){
 }
 async function removeActivity(id){
   if(mode==='cloud' && supa && tripCode){
-    const { error } = await supa.rpc('delete_activity',{ p_code: tripCode, p_id: id });
+    const { error } = await supa.rpc('delete_activity',{ p_code: tripCode, p_passcode: myPasscode, p_id: id });
     if(error){ toast('Delete failed'); return; }
     await loadAll();
   } else {
@@ -590,7 +710,7 @@ async function removeActivity(id){
 }
 async function persistStay(s){
   if(mode==='cloud' && supa && tripCode){
-    const { error } = await supa.rpc('save_stay',{ p_code: tripCode, p_stay: s });
+    const { error } = await supa.rpc('save_stay',{ p_code: tripCode, p_passcode: myPasscode, p_stay: s });
     if(error){ toast('Save failed'); return; }
     await loadAll();
   } else {
@@ -605,12 +725,21 @@ function renderIdeas(){
 }
 function renderPlan(){
   const list=document.getElementById('plan-list'); list.innerHTML='';
+  const filterRow=document.getElementById('plan-filter-row');
+  filterRow.classList.toggle('show',!!myName);
+  const filterActive=!!myName && planFilterMine;
+  const visible=filterActive?activities.filter(a=>(a.attendees||[]).includes(myName)):activities;
   const totals={JPY:0,USD:0};
-  activities.forEach(a=>{ if(a.cost) totals[a.cur||'JPY']+=Number(a.cost); });
+  visible.forEach(a=>{ if(a.cost) totals[a.cur||'JPY']+=Number(a.cost); });
   const parts=[]; if(totals.JPY)parts.push(fmtMoney(totals.JPY,'JPY')); if(totals.USD)parts.push(fmtMoney(totals.USD,'USD'));
   document.getElementById('plan-total').textContent=parts.length?parts.join(' · '):'—';
-  if(!activities.length){ list.innerHTML='<div class="empty"><div class="big">🗺️</div><p>No plans yet.<br>Pick a Tokyo idea above, or add your own below.</p></div>'; return; }
-  const groups={}; activities.forEach(a=>{ const k=a.date||'zzz-undated'; (groups[k]=groups[k]||[]).push(a); });
+  if(!visible.length){
+    list.innerHTML=filterActive
+      ? '<div class="empty"><div class="big">🙋</div><p>Nothing assigned to you yet.<br>Add yourself to a plan, or switch back to "All".</p></div>'
+      : '<div class="empty"><div class="big">🗺️</div><p>No plans yet.<br>Pick a Tokyo idea above, or add your own below.</p></div>';
+    return;
+  }
+  const groups={}; visible.forEach(a=>{ const k=a.date||'zzz-undated'; (groups[k]=groups[k]||[]).push(a); });
   Object.keys(groups).sort().forEach(k=>{
     const items=groups[k].sort((x,y)=>(x.time||'99').localeCompare(y.time||'99'));
     const g=document.createElement('div'); g.className='day-group';
@@ -650,7 +779,21 @@ function renderAttendeeChips(){
     });
     wrap.appendChild(chip);
   });
+  const addmeBtn=document.getElementById('addme-btn');
+  if(myName){
+    const inList=selectedAttendees.includes(myName);
+    addmeBtn.textContent=inList?('− Remove me ('+myName+')'):('+ Add me ('+myName+')');
+    addmeBtn.classList.add('show');
+  } else {
+    addmeBtn.classList.remove('show');
+  }
 }
+document.getElementById('addme-btn').addEventListener('click',()=>{
+  if(!myName) return;
+  if(selectedAttendees.includes(myName)) selectedAttendees=selectedAttendees.filter(n=>n!==myName);
+  else selectedAttendees=[...selectedAttendees,myName];
+  renderAttendeeChips();
+});
 function openPlanSheet(activity,prefill){
   const editing=!!activity;
   document.getElementById('plan-sheet-title').textContent=editing?'Edit plan':'Add to itinerary';
@@ -813,8 +956,10 @@ function renderTripSheet(){
     '<h2>Shared with your family</h2><p class="lead">Anyone who opens this link sees and edits the same trip — flights, stay, plans, packing, everything — live.</p>'+
     '<div class="code-box"><div class="lbl">Trip link</div><div class="code">'+escapeHtml(tripLink())+'</div></div>'+
     '<button class="btn btn-primary" id="t-copy-link">Copy link</button>'+
+    '<div class="whoami-row"><span>Using as: <strong>'+(myName?escapeHtml(myName):'Not set')+'</strong></span><button class="chat-key-link" id="t-change-who">Change</button></div>'+
     '<div style="margin-top:10px"><button class="btn btn-ghost" id="t-done">Done</button></div>';
   document.getElementById('t-copy-link').addEventListener('click',()=>copyText(tripLink(),'Link copied'));
+  document.getElementById('t-change-who').addEventListener('click',()=>{ closeTripSheet(); showWhoami(); });
   document.getElementById('t-done').addEventListener('click',closeTripSheet);
 }
 function copyText(txt,msg){
@@ -958,7 +1103,7 @@ async function togglePackItem(id){ const item=packing.find(p=>p.id===id); if(!it
 async function deletePackItem(id){ packing=packing.filter(p=>p.id!==id); await persistPacking(); }
 async function persistPacking(){
   if(mode==='cloud' && supa && tripCode){
-    const { error } = await supa.rpc('save_packing',{ p_code: tripCode, p_packing: packing });
+    const { error } = await supa.rpc('save_packing',{ p_code: tripCode, p_passcode: myPasscode, p_packing: packing });
     if(error){ toast('Save failed'); }
   } else { await Local.set('packing',packing); }
   renderPacking();
@@ -996,7 +1141,7 @@ function renderNotes(){
 async function deleteNote(id){ notes=notes.filter(n=>n.id!==id); await persistNotes(); }
 async function persistNotes(){
   if(mode==='cloud' && supa && tripCode){
-    const { error } = await supa.rpc('save_notes',{ p_code: tripCode, p_notes: notes });
+    const { error } = await supa.rpc('save_notes',{ p_code: tripCode, p_passcode: myPasscode, p_notes: notes });
     if(error){ toast('Save failed'); }
   } else { await Local.set('notes',notes); }
   renderNotes();
@@ -1011,7 +1156,7 @@ function renderNoteAuthorChips(){
     wrap.appendChild(chip);
   });
 }
-function openNoteSheet(){ document.getElementById('note-input').value=''; renderNoteAuthorChips(); document.getElementById('note-overlay').classList.add('open'); }
+function openNoteSheet(){ document.getElementById('note-input').value=''; selectedNoteAuthor=myName||selectedNoteAuthor||FAMILY[FAMILY.length-1]; renderNoteAuthorChips(); document.getElementById('note-overlay').classList.add('open'); }
 function closeNoteSheet(){ document.getElementById('note-overlay').classList.remove('open'); }
 document.getElementById('note-overlay').addEventListener('click',e=>{ if(e.target.id==='note-overlay') closeNoteSheet(); });
 document.getElementById('note-sheet-x').addEventListener('click',closeNoteSheet);
@@ -1069,7 +1214,7 @@ document.getElementById('emg-save-btn').addEventListener('click',async()=>{
   };
   closeEmgSheet();
   if(mode==='cloud' && supa && tripCode){
-    const { error } = await supa.rpc('save_emergency',{ p_code: tripCode, p_emergency: emergency });
+    const { error } = await supa.rpc('save_emergency',{ p_code: tripCode, p_passcode: myPasscode, p_emergency: emergency });
     if(error){ toast('Save failed'); }
   } else { await Local.set('emergency',emergency); }
   renderEmergency();
@@ -1217,23 +1362,109 @@ document.getElementById('search-input').addEventListener('keydown',e=>{ if(e.key
 
 // ---------- init ----------
 async function init(){
+  renderGreeting();
   renderIdeas(); renderCatChips();
   chatMessages=(await Local.get('chatMessages'))||[];
   selectedNoteAuthor=(await Local.get('lastNoteAuthor'))||FAMILY[FAMILY.length-1];
   renderChat(); renderPhrasebook(); wireCurrencyConverter();
-  if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase){
-    try{ supa=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); mode='cloud'; }
-    catch(e){ console.warn('supabase init failed',e); mode='local'; }
-  }
-  if(mode==='cloud'){ tripCode = TRIP_CODE; }
   updateTripUI();
   await loadAll();
   sizeChatWrap();
   // live refresh while the tab is visible
   setInterval(()=>{ if(mode==='cloud' && tripCode && document.visibilityState==='visible') loadAll(); }, 7000);
   document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && mode==='cloud' && tripCode) loadAll(); });
+  appStarted=true;
 }
-init();
+
+// ---------- passcode gate (light deterrent, not real security — see chat for details) ----------
+function showApp(){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('whoami-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+}
+function renderGreeting(){
+  const el=document.getElementById('topbar-eyebrow');
+  if(el) el.textContent=myName?('Hey '+myName+' · Tokyo 東京'):'Tokyo · 東京';
+}
+function renderWhoamiChips(){
+  const wrap=document.getElementById('whoami-chips'); wrap.innerHTML='';
+  FAMILY.forEach(name=>{
+    const chip=document.createElement('button');
+    chip.className='cat-chip';
+    chip.textContent=name;
+    chip.addEventListener('click',async()=>{
+      myName=name;
+      await Local.set('myName',myName);
+      document.getElementById('whoami-screen').style.display='none';
+      if(appStarted){
+        document.getElementById('app').style.display='flex';
+        renderGreeting(); renderPlan();
+        toast('Switched to '+myName);
+      } else { showApp(); init(); }
+    });
+    wrap.appendChild(chip);
+  });
+}
+function showWhoami(){ document.getElementById('whoami-screen').style.display='flex'; renderWhoamiChips(); }
+document.getElementById('whoami-skip-btn').addEventListener('click',()=>{
+  document.getElementById('whoami-screen').style.display='none';
+  if(appStarted){ document.getElementById('app').style.display='flex'; }
+  else { showApp(); init(); }
+});
+
+async function attemptUnlock(){
+  const inp=document.getElementById('lock-input');
+  const err=document.getElementById('lock-error');
+  const btn=document.getElementById('lock-unlock-btn');
+  const v=inp.value.trim();
+  if(!v){ err.classList.add('show'); return; }
+  btn.disabled=true; btn.textContent='Checking…';
+  const ok=await validatePasscode(v);
+  btn.disabled=false; btn.textContent='Unlock';
+  if(ok){
+    myPasscode=v;
+    await Local.set('myPasscode',myPasscode);
+    err.classList.remove('show');
+    document.getElementById('lock-screen').style.display='none';
+    myName=await Local.get('myName');
+    if(!myName){ showWhoami(); } else { showApp(); init(); }
+  } else {
+    err.classList.add('show');
+    inp.value=''; inp.focus();
+  }
+}
+async function validatePasscode(v){
+  if(mode==='cloud' && supa && tripCode){
+    const { data, error } = await supa.rpc('get_trip',{ p_code: tripCode, p_passcode: v });
+    if(error){ console.warn('validatePasscode',error); return false; }
+    return data!==null;
+  }
+  // No Supabase configured — nothing shared to check against, so fall back to a local-only check.
+  return v.toLowerCase()===LOCAL_FALLBACK_PASSCODE.toLowerCase();
+}
+document.getElementById('lock-unlock-btn').addEventListener('click',attemptUnlock);
+document.getElementById('lock-input').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); attemptUnlock(); } });
+
+function setupSupabaseClient(){
+  if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase){
+    try{ supa=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); mode='cloud'; tripCode=TRIP_CODE; }
+    catch(e){ console.warn('supabase init failed',e); mode='local'; }
+  }
+}
+
+(async function bootstrap(){
+  setupSupabaseClient();
+  const savedPasscode=await Local.get('myPasscode');
+  if(savedPasscode && await validatePasscode(savedPasscode)){
+    myPasscode=savedPasscode;
+    myName=await Local.get('myName');
+    if(!myName){ document.getElementById('lock-screen').style.display='none'; showWhoami(); }
+    else { showApp(); init(); }
+  } else {
+    if(savedPasscode) await Local.set('myPasscode',null); // saved passcode no longer valid (e.g. it was changed) — ask again
+    setTimeout(()=>document.getElementById('lock-input').focus(),250);
+  }
+})();
 </script>
 </body>
 </html>
