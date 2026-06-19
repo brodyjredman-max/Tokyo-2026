@@ -269,10 +269,10 @@
   <div class="lock-card">
     <div class="lock-eyebrow">Tokyo · 東京</div>
     <h1 class="lock-title">Redman Tokyo Trip 2026</h1>
-    <p class="lock-sub">Enter the trip passcode to continue.</p>
-    <input type="password" id="lock-input" placeholder="Passcode" autocomplete="off" inputmode="numeric">
-    <div class="lock-error" id="lock-error">That's not quite right — try again.</div>
-    <button class="btn btn-primary" id="lock-unlock-btn" style="margin-top:14px;">Unlock</button>
+    <p class="lock-sub">Enter the trip password to continue.</p>
+    <input type="password" id="lock-input" placeholder="Password" autocomplete="current-password">
+    <div class="lock-error" id="lock-error">Wrong password — try again.</div>
+    <button class="btn btn-primary" id="lock-unlock-btn" style="margin-top:14px;">Log in</button>
   </div>
 </div>
 <div id="whoami-screen" class="gate-screen">
@@ -606,7 +606,7 @@
 const SUPABASE_URL = "https://pnexpwqoyxnvpqkszeut.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuZXhwd3FveXhudnBxa3N6ZXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NzY3MTYsImV4cCI6MjA5NzQ1MjcxNn0.hGuE683Xs22BI1bVyk2UCTf7XeyaQXT_YGMy-E6PfKQ";
 const TRIP_CODE = "9790117c-7359-4a98-ad5e-3f2f1836b6c7"; // the one trip this app always connects to — no setup needed
-const LOCAL_FALLBACK_PASSCODE = "8888"; // ONLY used if Supabase isn't configured (no shared backend to check against). The real passcode lives in the database, not here.
+const LOCAL_FALLBACK_PASSCODE = "Jubilee-unity-nimble-pinnacle-walnut-opal-339"; // ONLY used if Supabase isn't configured (no shared backend to check against). The real password lives in the database, not here.
 // ========================================================================
 
 // ---- local per-device storage (remembers which trip this device joined) ----
@@ -1376,7 +1376,7 @@ async function init(){
   appStarted=true;
 }
 
-// ---------- passcode gate (light deterrent, not real security — see chat for details) ----------
+// ---------- login (password checked server-side against the database — see chat history for details) ----------
 function showApp(){
   document.getElementById('lock-screen').style.display='none';
   document.getElementById('whoami-screen').style.display='none';
@@ -1440,7 +1440,7 @@ async function validatePasscode(v){
     return data!==null;
   }
   // No Supabase configured — nothing shared to check against, so fall back to a local-only check.
-  return v.toLowerCase()===LOCAL_FALLBACK_PASSCODE.toLowerCase();
+  return v===LOCAL_FALLBACK_PASSCODE;
 }
 document.getElementById('lock-unlock-btn').addEventListener('click',attemptUnlock);
 document.getElementById('lock-input').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); attemptUnlock(); } });
