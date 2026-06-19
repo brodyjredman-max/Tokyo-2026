@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tokyo Trip · Jun 22 – Jul 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{--bg:#14161D;--surface:#1E212B;--surface-2:#262A36;--paper:#FAF8F2;--ink:#14161D;--accent:#E2614B;--accent-tint:rgba(226,97,75,0.12);--accent-line:rgba(226,97,75,0.35);--sage:#7E9B82;--sage-tint:rgba(126,155,130,0.15);--muted:#9A9CAB;--muted-dim:#6B6E7C;--line:rgba(250,248,242,0.10);--tab-h:64px;}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{background:var(--bg);color:var(--paper);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
+  #app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative;}
+  .topbar{flex:0 0 auto;padding:18px 18px 12px;border-bottom:1px solid var(--line);background:var(--bg);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .topbar .eyebrow{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:5px;}
+  .topbar h1{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700;letter-spacing:-0.01em;}
+  .topbar .sub{font-size:12px;color:var(--muted);margin-top:3px;}
+  .trip-btn{flex:0 0 auto;background:var(--surface-2);border:1px solid var(--line);color:var(--paper);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:8px 12px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:2px;}
+  .trip-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--muted-dim);}
+  .trip-btn.live .dot{background:var(--sage);}
+  .sync-banner{background:var(--accent-tint);border-bottom:1px solid var(--accent-line);color:var(--paper);font-size:12.5px;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .sync-banner button{background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;padding:6px 11px;cursor:pointer;flex:0 0 auto;font-family:'Inter',sans-serif;}
+  .sync-banner.hidden{display:none;}
+  .scroll{flex:1 1 auto;overflow-y:auto;padding:20px 16px calc(var(--tab-h) + 28px);-webkit-overflow-scrolling:touch;}
+  .view{display:none;}
+  .view.active{display:block;animation:fade 0.25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  .card{background:var(--paper);color:var(--ink);border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.28);}
+  .card-top{padding:16px 18px 14px;}
+  .card-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .leg-tag{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);}
+  .status-pill{font-size:10px;font-weight:600;color:#3F7A52;background:#E2EFE4;padding:3px 9px;border-radius:999px;letter-spacing:0.03em;}
+  .route-row{display:flex;align-items:center;gap:10px;}
+  .city-block{flex:1;}
+  .city-block.right{text-align:right;}
+  .city-code{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;line-height:1;}
+  .city-name{font-size:11px;color:#6A6E74;margin-top:3px;}
+  .plane-divider{flex:0 0 auto;color:var(--sage);font-size:16px;}
+  .time-row{display:flex;justify-content:space-between;margin-top:12px;}
+  .time-block.right{text-align:right;}
+  .time-big{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;}
+  .time-sub{font-size:10px;color:#6A6E74;margin-top:2px;}
+  .perf{position:relative;height:0;border-top:2px dashed rgba(20,22,29,0.16);}
+  .perf::before,.perf::after{content:"";position:absolute;top:-10px;width:20px;height:20px;background:var(--bg);border-radius:50%;}
+  .perf::before{left:-28px;}.perf::after{right:-28px;}
+  .card-bottom{padding:13px 18px 16px;background:rgba(226,97,75,0.04);}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;}
+  .dt-label{font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#6A6E74;margin-bottom:2px;}
+  .dt-value{font-size:14px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+  .transfer{display:flex;align-items:center;gap:11px;padding:13px 16px;margin:2px 0 16px;background:var(--sage-tint);border:1px solid rgba(126,155,130,0.3);border-radius:12px;font-size:13px;line-height:1.4;}
+  .transfer .ic{font-size:17px;flex-shrink:0;}
+  .transfer strong{color:var(--sage);}
+  .section-head{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--accent);margin:26px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  .section-head.first{margin-top:4px;}
+  .info-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:10px;}
+  .info-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;font-size:14px;border-bottom:1px solid var(--line);}
+  .info-row:last-child{border-bottom:none;}
+  .info-row .label{color:var(--muted);}
+  .info-row .value{font-weight:600;text-align:right;}
+  details{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+  summary{padding:14px 16px;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";font-size:18px;color:var(--accent);transition:transform 0.2s;}
+  details[open] summary::after{transform:rotate(45deg);}
+  .details-body{padding:0 16px 16px;font-size:13px;color:#C6C8D2;line-height:1.6;}
+  .details-body div{margin-bottom:6px;}
+  .details-body strong{color:var(--paper);}
+  .contact-link{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--accent-tint);border:1px solid var(--accent-line);border-radius:12px;color:var(--paper);text-decoration:none;margin-bottom:10px;font-size:14px;}
+  .contact-link .arrow{color:var(--accent);}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;border:none;border-radius:12px;padding:14px 18px;cursor:pointer;width:100%;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:active{background:#cf5340;}
+  .btn-ghost{background:var(--surface-2);color:var(--paper);}
+  .btn-danger{background:transparent;color:#E2614B;border:1px solid var(--accent-line);}
+  .empty{text-align:center;padding:36px 20px;color:var(--muted);border:1px dashed var(--line);border-radius:14px;margin-bottom:16px;}
+  .empty .big{font-size:30px;margin-bottom:10px;}
+  .empty p{font-size:14px;line-height:1.5;margin-bottom:16px;}
+  .stay-card{background:var(--paper);color:var(--ink);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,0.28);}
+  .stay-name{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:2px;}
+  .stay-addr{font-size:13px;color:#5C6068;margin-bottom:14px;line-height:1.4;}
+  .stay-inout{display:flex;gap:10px;margin-bottom:14px;}
+  .stay-inout > div{flex:1;background:rgba(126,155,130,0.12);border-radius:10px;padding:10px 12px;}
+  .stay-inout .k{font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#6A6E74;margin-bottom:3px;}
+  .stay-inout .v{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;}
+  .stay-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-bottom:4px;}
+  .stay-meta .k{font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#6A6E74;}
+  .stay-meta .v{font-size:14px;font-weight:600;word-break:break-word;}
+  .stay-actions{display:flex;gap:10px;margin-top:12px;}
+  .mini-link{flex:1;text-align:center;text-decoration:none;font-size:13px;font-weight:600;padding:11px;border-radius:10px;background:var(--accent-tint);color:var(--accent);border:1px solid var(--accent-line);}
+  .stay-notes{font-size:13px;color:#5C6068;line-height:1.5;margin-top:10px;padding-top:12px;border-top:1px solid rgba(20,22,29,0.1);}
+  .plan-summary{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:16px;}
+  .plan-summary .s-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+  .plan-summary .s-total{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--paper);}
+  .ideas{margin-bottom:20px;}
+  .ideas-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;}
+  .ideas-scroll::-webkit-scrollbar{display:none;}
+  .idea-chip{flex:0 0 auto;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:13px;color:var(--paper);cursor:pointer;white-space:nowrap;}
+  .idea-chip:active{background:var(--accent-tint);border-color:var(--accent-line);}
+  .day-group{margin-bottom:20px;}
+  .day-head{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--paper);margin-bottom:10px;display:flex;align-items:baseline;gap:8px;}
+  .day-head .dow{color:var(--accent);}
+  .day-head .count{font-size:12px;color:var(--muted-dim);font-weight:500;margin-left:auto;}
+  .plan-item{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:9px;cursor:pointer;}
+  .plan-item:active{background:var(--surface-2);}
+  .pi-time{flex:0 0 54px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--accent);padding-top:1px;}
+  .pi-time .none{color:var(--muted-dim);font-weight:500;}
+  .pi-body{flex:1;min-width:0;}
+  .pi-title{font-size:15px;font-weight:600;margin-bottom:3px;}
+  .pi-cat{font-size:12px;color:var(--muted);}
+  .pi-notes{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;}
+  .pi-cost{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--paper);align-self:center;}
+  .fab-row{position:sticky;bottom:0;padding-top:4px;}
+  .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:calc(var(--tab-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(20,22,29,0.94);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;z-index:20;}
+  .tab{flex:1;background:none;border:none;cursor:pointer;color:var(--muted-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding-top:8px;}
+  .tab .ti{font-size:19px;}
+  .tab.active{color:var(--accent);}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:40;display:none;align-items:flex-end;justify-content:center;}
+  .overlay.open{display:flex;}
+  .sheet{width:100%;max-width:480px;background:var(--bg);border-radius:20px 20px 0 0;border-top:1px solid var(--line);max-height:92vh;overflow-y:auto;padding:8px 18px calc(24px + env(safe-area-inset-bottom));animation:slideup 0.28s ease;}
+  @keyframes slideup{from{transform:translateY(100%);}to{transform:none;}}
+  .sheet-grab{width:40px;height:4px;background:var(--surface-2);border-radius:999px;margin:8px auto 14px;}
+  .sheet h2{font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px;}
+  .sheet .lead{font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:0.03em;}
+  .field input,.field textarea,.field select{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;color:var(--paper);font-family:'Inter',sans-serif;font-size:15px;padding:12px 13px;}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:2px solid var(--accent-line);border-color:var(--accent);}
+  .field textarea{resize:vertical;min-height:64px;}
+  .two-col{display:flex;gap:12px;}
+  .two-col .field{flex:1;}
+  .cat-chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .cat-chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:13px;color:var(--paper);cursor:pointer;}
+  .cat-chip.sel{background:var(--accent-tint);border-color:var(--accent);}
+  .cost-row{display:flex;gap:10px;}
+  .cost-row .cur-select{flex:0 0 90px;}
+  .cost-row .cost-input{flex:1;}
+  .sheet-actions{display:flex;gap:10px;margin-top:8px;}
+  .sheet-actions .btn{flex:1;}
+  .code-box{background:var(--surface);border:1px dashed var(--accent-line);border-radius:12px;padding:16px;text-align:center;margin-bottom:14px;}
+  .code-box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px;}
+  .code-box .code{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;word-break:break-all;line-height:1.4;color:var(--paper);}
+  .divider-or{display:flex;align-items:center;gap:12px;color:var(--muted-dim);font-size:12px;margin:18px 0;}
+  .divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:var(--line);}
+  .toast{position:fixed;bottom:calc(var(--tab-h) + 18px);left:50%;transform:translateX(-50%);background:var(--surface-2);color:var(--paper);font-size:13px;font-weight:600;padding:11px 18px;border-radius:999px;border:1px solid var(--line);z-index:60;opacity:0;transition:opacity 0.2s;pointer-events:none;}
+  .toast.show{opacity:1;}
+  ::placeholder{color:var(--muted-dim);}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Tokyo · 東京</div>
+      <h1>Brody's Japan Trip</h1>
+      <div class="sub">Jun 22 – Jul 2, 2026 · Reservation DHSC6C</div>
+    </div>
+    <button class="trip-btn" id="trip-btn"><span class="dot"></span><span id="trip-btn-label">Sync</span></button>
+  </div>
+
+  <div class="sync-banner hidden" id="sync-banner">
+    <span id="sync-banner-text">Local only — not shared yet.</span>
+    <button id="sync-banner-btn">Set up</button>
+  </div>
+
+  <div class="scroll">
+    <section class="view active" id="view-flights">
+      <div class="card">
+        <div class="card-top">
+          <div class="card-label"><span class="leg-tag">Outbound · Mon, Jun 22</span><span class="status-pill">Confirmed</span></div>
+          <div class="route-row">
+            <div class="city-block"><div class="city-code">EWR</div><div class="city-name">Newark</div></div>
+            <div class="plane-divider">&#9992;</div>
+            <div class="city-block right"><div class="city-code">NRT</div><div class="city-name">Tokyo Narita</div></div>
+          </div>
+          <div class="time-row">
+            <div class="time-block"><div class="time-big">11:40 AM</div><div class="time-sub">Terminal C</div></div>
+            <div class="time-block right"><div class="time-big">2:30 PM</div><div class="time-sub">Terminal 1 · next day</div></div>
+          </div>
+        </div>
+        <div class="perf"></div>
+        <div class="card-bottom">
+          <div class="detail-grid">
+            <div><div class="dt-label">Flight</div><div class="dt-value">NH 6453</div></div>
+            <div><div class="dt-label">Operated by</div><div class="dt-value">United</div></div>
+            <div><div class="dt-label">Seat</div><div class="dt-value">51J</div></div>
+            <div><div class="dt-label">Confirmation</div><div class="dt-value">VHX47SO2</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="transfer"><span class="ic">&#128649;</span><div><strong>Surface transfer</strong> — Narita to Haneda between flights. Plan ground transport; not a flight segment.</div></div>
+      <div class="card">
+        <div class="card-top">
+          <div class="card-label"><span class="leg-tag">Return · Thu, Jul 2</span><span class="status-pill">Confirmed</span></div>
+          <div class="route-row">
+            <div class="city-block"><div class="city-code">HND</div><div class="city-name">Tokyo Haneda</div></div>
+            <div class="plane-divider">&#9992;</div>
+            <div class="city-block right"><div class="city-code">JFK</div><div class="city-name">New York</div></div>
+          </div>
+          <div class="time-row">
+            <div class="time-block"><div class="time-big">10:50 AM</div><div class="time-sub">Terminal 2</div></div>
+            <div class="time-block right"><div class="time-big">11:00 AM</div><div class="time-sub">Terminal 7 · same day</div></div>
+          </div>
+        </div>
+        <div class="perf"></div>
+        <div class="card-bottom">
+          <div class="detail-grid">
+            <div><div class="dt-label">Flight</div><div class="dt-value">NH 110</div></div>
+            <div><div class="dt-label">Operated by</div><div class="dt-value">ANA</div></div>
+            <div><div class="dt-label">Seat</div><div class="dt-value">39D</div></div>
+            <div><div class="dt-label">Confirmation</div><div class="dt-value">SKX21SO2</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="section-head">Good to Know</div>
+      <div class="info-card">
+        <div class="info-row"><span class="label">Ticket number</span><span class="value">2052429502322</span></div>
+        <div class="info-row"><span class="label">Checked bags</span><span class="value">2 × 50 lb / 23 kg</span></div>
+        <div class="info-row"><span class="label">Carry-on</span><span class="value">1 bag each leg</span></div>
+        <div class="info-row"><span class="label">Check-in deadline</span><span class="value">60 min before dep.</span></div>
+      </div>
+      <details><summary>Fare rules</summary><div class="details-body"><div><strong>Non-refundable</strong> ticket.</div><div>Date/itinerary changes allowed before departure, subject to a change fee plus fare difference.</div><div>Outbound: United economy (V). Return: ANA premium economy (S/Y).</div></div></details>
+      <details><summary>Terminal reminder</summary><div class="details-body"><div>ANA international flights at Haneda can use different terminals depending on the flight — double-check on your travel date.</div></div></details>
+      <div class="section-head">Need Help?</div>
+      <a class="contact-link" href="tel:18002359262"><span>&#128222; ANA US — 1-800-235-9262</span><span class="arrow">&rarr;</span></a>
+      <a class="contact-link" href="tel:+13107823011"><span>&#127760; Outside US — +1-310-782-3011</span><span class="arrow">&rarr;</span></a>
+    </section>
+    <section class="view" id="view-stay"><div id="stay-content"></div></section>
+    <section class="view" id="view-plan">
+      <div class="plan-summary"><span class="s-label">Planned spend</span><span class="s-total" id="plan-total">—</span></div>
+      <div class="ideas">
+        <div class="section-head first">Tokyo Ideas · tap to add</div>
+        <div class="ideas-scroll" id="ideas-scroll"></div>
+      </div>
+      <div id="plan-list"></div>
+      <div class="fab-row"><button class="btn btn-primary" id="add-plan-btn">&#65291; Add to itinerary</button></div>
+    </section>
+  </div>
+  <nav class="tabbar">
+    <button class="tab active" data-tab="flights"><span class="ti">&#9992;</span>Flights</button>
+    <button class="tab" data-tab="stay"><span class="ti">&#127968;</span>Stay</button>
+    <button class="tab" data-tab="plan"><span class="ti">&#128203;</span>Plan</button>
+  </nav>
+</div>
+
+<div class="overlay" id="plan-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <h2 id="plan-sheet-title">Add to itinerary</h2>
+    <input type="hidden" id="f-id">
+    <div class="field"><label for="f-title">What is it?</label><input type="text" id="f-title" placeholder="e.g. Senso-ji Temple"></div>
+    <div class="field"><label>Category</label><div class="cat-chips" id="cat-chips"></div></div>
+    <div class="two-col">
+      <div class="field"><label for="f-date">Date</label><input type="date" id="f-date" min="2026-06-22" max="2026-07-02"></div>
+      <div class="field"><label for="f-time">Time</label><input type="time" id="f-time"></div>
+    </div>
+    <div class="field"><label for="f-cost">Cost (optional)</label><div class="cost-row"><select id="f-cur" class="cur-select"><option value="JPY">&yen; JPY</option><option value="USD">$ USD</option></select><input type="number" id="f-cost" class="cost-input" placeholder="0" min="0" step="any"></div></div>
+    <div class="field"><label for="f-notes">Notes (optional)</label><textarea id="f-notes" placeholder="Address, booking ref, who's coming, tips…"></textarea></div>
+    <div class="sheet-actions"><button class="btn btn-ghost" id="plan-cancel">Cancel</button><button class="btn btn-primary" id="plan-save">Save</button></div>
+    <div style="margin-top:10px;display:none;" id="plan-delete-wrap"><button class="btn btn-danger" id="plan-delete">Delete this plan</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="stay-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <h2>Your stay</h2>
+    <div class="field"><label for="s-name">Place name</label><input type="text" id="s-name" placeholder="e.g. Cozy loft in Shibuya"></div>
+    <div class="field"><label for="s-addr">Address</label><input type="text" id="s-addr" placeholder="Full address"></div>
+    <div class="two-col">
+      <div class="field"><label for="s-checkin">Check-in</label><input type="date" id="s-checkin"></div>
+      <div class="field"><label for="s-checkin-t">Time</label><input type="time" id="s-checkin-t"></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label for="s-checkout">Check-out</label><input type="date" id="s-checkout"></div>
+      <div class="field"><label for="s-checkout-t">Time</label><input type="time" id="s-checkout-t"></div>
+    </div>
+    <div class="field"><label for="s-conf">Confirmation code</label><input type="text" id="s-conf" placeholder="Airbnb confirmation"></div>
+    <div class="two-col">
+      <div class="field"><label for="s-host">Host name</label><input type="text" id="s-host" placeholder="Host"></div>
+      <div class="field"><label for="s-phone">Host phone</label><input type="tel" id="s-phone" placeholder="+81…"></div>
+    </div>
+    <div class="field"><label for="s-wifi">Wi-Fi</label><input type="text" id="s-wifi" placeholder="Network / password"></div>
+    <div class="field"><label for="s-link">Listing link</label><input type="url" id="s-link" placeholder="https://airbnb.com/…"></div>
+    <div class="field"><label for="s-notes">Notes</label><textarea id="s-notes" placeholder="Door code, check-in steps, nearest station…"></textarea></div>
+    <div class="sheet-actions"><button class="btn btn-ghost" id="stay-cancel">Cancel</button><button class="btn btn-primary" id="stay-save">Save stay</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="trip-overlay">
+  <div class="sheet">
+    <div class="sheet-grab"></div>
+    <div id="trip-sheet-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ CONFIG — paste your Supabase project values here ============
+const SUPABASE_URL = "https://pnexpwqoyxnvpqkszeut.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuZXhwd3FveXhudnBxa3N6ZXV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NzY3MTYsImV4cCI6MjA5NzQ1MjcxNn0.hGuE683Xs22BI1bVyk2UCTf7XeyaQXT_YGMy-E6PfKQ";
+// ========================================================================
+
+// ---- local per-device storage (remembers which trip this device joined) ----
+const mem = {};
+const Local = {
+  async get(k){ try{ const r=await window.storage.get(k,false); if(r&&r.value!=null) return JSON.parse(r.value); return (k in mem)?mem[k]:null; }catch(e){ return (k in mem)?mem[k]:null; } },
+  async set(k,v){ mem[k]=v; try{ await window.storage.set(k,JSON.stringify(v),false); }catch(e){} }
+};
+
+let supa = null, mode = 'local', tripCode = null, tripName = '';
+let activities = [], stay = null, selectedCat = 'sightseeing';
+
+const CATS = { sightseeing:'🏯 Sightseeing', food:'🍜 Food & drink', shopping:'🛍️ Shopping', nightlife:'🌃 Nightlife', nature:'🌸 Nature', other:'📍 Other' };
+function catIcon(c){ return (CATS[c]||CATS.other).split(' ')[0]; }
+function catLabel(c){ return (CATS[c]||CATS.other).replace(/^\S+\s/,''); }
+const IDEAS = [
+  {title:'Senso-ji Temple',cat:'sightseeing'},{title:'teamLab Planets',cat:'sightseeing'},
+  {title:'Shibuya Crossing & Sky',cat:'sightseeing'},{title:'Meiji Jingu Shrine',cat:'nature'},
+  {title:'Tsukiji Outer Market',cat:'food'},{title:'Shinjuku Gyoen',cat:'nature'},
+  {title:'Akihabara',cat:'shopping'},{title:'Tokyo Skytree',cat:'sightseeing'},
+  {title:'Golden Gai bars',cat:'nightlife'},{title:'Ueno Park & museums',cat:'sightseeing'}
+];
+
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+
+// ---------- tabs ----------
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('view-'+t.dataset.tab).classList.add('active');
+    document.querySelector('.scroll').scrollTop=0;
+  });
+});
+
+// ---------- formatting ----------
+function fmtMoney(a,cur){ const n=Number(a); if(cur==='USD') return '$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); return '¥'+Math.round(n).toLocaleString('en-US'); }
+function fmtDate(iso){ if(!iso) return ''; const d=new Date(iso+'T00:00:00'); return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
+function fmtTime(t){ if(!t) return ''; const [h,m]=t.split(':').map(Number); const ap=h>=12?'PM':'AM'; const hh=((h+11)%12)+1; return hh+':'+String(m).padStart(2,'0')+' '+ap; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ---------- data layer (branches on mode) ----------
+async function loadAll(){
+  if(mode==='cloud' && supa && tripCode){
+    const { data, error } = await supa.rpc('get_trip',{ p_code: tripCode });
+    if(error){ console.warn('get_trip',error); return; }
+    if(data===null){ tripCode=null; await Local.set('tripCode',null); openTripSheet(); updateTripUI(); return; }
+    tripName=data.name||''; activities=data.activities||[]; stay=data.stay||null;
+  } else {
+    activities=(await Local.get('activities'))||[]; stay=(await Local.get('stay'))||null;
+  }
+  renderPlan(); renderStay();
+}
+async function persistActivity(rec){
+  if(mode==='cloud' && supa && tripCode){
+    const { error } = await supa.rpc('upsert_activity',{ p_code: tripCode, p_activity: rec });
+    if(error){ toast('Save failed'); console.warn(error); return; }
+    await loadAll();
+  } else {
+    if(!rec.id) rec.id='a'+Date.now()+Math.random().toString(36).slice(2,6);
+    const i=activities.findIndex(a=>a.id===rec.id);
+    if(i>=0) activities[i]=rec; else activities.push(rec);
+    await Local.set('activities',activities); renderPlan();
+  }
+}
+async function removeActivity(id){
+  if(mode==='cloud' && supa && tripCode){
+    const { error } = await supa.rpc('delete_activity',{ p_code: tripCode, p_id: id });
+    if(error){ toast('Delete failed'); return; }
+    await loadAll();
+  } else {
+    activities=activities.filter(a=>a.id!==id); await Local.set('activities',activities); renderPlan();
+  }
+}
+async function persistStay(s){
+  if(mode==='cloud' && supa && tripCode){
+    const { error } = await supa.rpc('save_stay',{ p_code: tripCode, p_stay: s });
+    if(error){ toast('Save failed'); return; }
+    await loadAll();
+  } else {
+    stay=s; await Local.set('stay',stay); renderStay();
+  }
+}
+
+// ---------- render: ideas, plan, stay ----------
+function renderIdeas(){
+  const wrap=document.getElementById('ideas-scroll'); wrap.innerHTML='';
+  IDEAS.forEach(idea=>{ const c=document.createElement('button'); c.className='idea-chip'; c.textContent=catIcon(idea.cat)+' '+idea.title; c.addEventListener('click',()=>openPlanSheet(null,idea)); wrap.appendChild(c); });
+}
+function renderPlan(){
+  const list=document.getElementById('plan-list'); list.innerHTML='';
+  const totals={JPY:0,USD:0};
+  activities.forEach(a=>{ if(a.cost) totals[a.cur||'JPY']+=Number(a.cost); });
+  const parts=[]; if(totals.JPY)parts.push(fmtMoney(totals.JPY,'JPY')); if(totals.USD)parts.push(fmtMoney(totals.USD,'USD'));
+  document.getElementById('plan-total').textContent=parts.length?parts.join(' · '):'—';
+  if(!activities.length){ list.innerHTML='<div class="empty"><div class="big">🗺️</div><p>No plans yet.<br>Pick a Tokyo idea above, or add your own below.</p></div>'; return; }
+  const groups={}; activities.forEach(a=>{ const k=a.date||'zzz-undated'; (groups[k]=groups[k]||[]).push(a); });
+  Object.keys(groups).sort().forEach(k=>{
+    const items=groups[k].sort((x,y)=>(x.time||'99').localeCompare(y.time||'99'));
+    const g=document.createElement('div'); g.className='day-group';
+    const head=document.createElement('div'); head.className='day-head';
+    if(k==='zzz-undated') head.innerHTML='<span class="dow">No date</span><span class="count">'+items.length+'</span>';
+    else head.innerHTML='<span class="dow">'+fmtDate(k).split(',')[0]+'</span><span>'+fmtDate(k).split(', ')[1]+'</span><span class="count">'+items.length+(items.length>1?' plans':' plan')+'</span>';
+    g.appendChild(head);
+    items.forEach(a=>{
+      const it=document.createElement('div'); it.className='plan-item'; it.addEventListener('click',()=>openPlanSheet(a));
+      const timeHtml=a.time?fmtTime(a.time):'<span class="none">—</span>';
+      const costHtml=a.cost?'<div class="pi-cost">'+fmtMoney(a.cost,a.cur||'JPY')+'</div>':'';
+      const notesHtml=a.notes?'<div class="pi-notes">'+escapeHtml(a.notes)+'</div>':'';
+      it.innerHTML='<div class="pi-time">'+timeHtml+'</div><div class="pi-body"><div class="pi-title">'+escapeHtml(a.title)+'</div><div class="pi-cat">'+catIcon(a.cat)+' '+catLabel(a.cat)+'</div>'+notesHtml+'</div>'+costHtml;
+      g.appendChild(it);
+    });
+    list.appendChild(g);
+  });
+}
+function renderCatChips(){
+  const wrap=document.getElementById('cat-chips'); wrap.innerHTML='';
+  Object.keys(CATS).forEach(c=>{ const chip=document.createElement('button'); chip.className='cat-chip'+(c===selectedCat?' sel':''); chip.textContent=CATS[c]; chip.addEventListener('click',()=>{selectedCat=c;renderCatChips();}); wrap.appendChild(chip); });
+}
+function openPlanSheet(activity,prefill){
+  const editing=!!activity;
+  document.getElementById('plan-sheet-title').textContent=editing?'Edit plan':'Add to itinerary';
+  document.getElementById('f-id').value=editing?activity.id:'';
+  document.getElementById('f-title').value=editing?activity.title:(prefill?prefill.title:'');
+  selectedCat=editing?(activity.cat||'sightseeing'):(prefill?prefill.cat:'sightseeing');
+  document.getElementById('f-date').value=editing?(activity.date||''):'2026-06-23';
+  document.getElementById('f-time').value=editing?(activity.time||''):'';
+  document.getElementById('f-cur').value=editing?(activity.cur||'JPY'):'JPY';
+  document.getElementById('f-cost').value=(editing&&activity.cost)?activity.cost:'';
+  document.getElementById('f-notes').value=editing?(activity.notes||''):'';
+  document.getElementById('plan-delete-wrap').style.display=editing?'block':'none';
+  renderCatChips();
+  document.getElementById('plan-overlay').classList.add('open');
+}
+function closePlanSheet(){ document.getElementById('plan-overlay').classList.remove('open'); }
+document.getElementById('add-plan-btn').addEventListener('click',()=>openPlanSheet(null));
+document.getElementById('plan-cancel').addEventListener('click',closePlanSheet);
+document.getElementById('plan-overlay').addEventListener('click',e=>{ if(e.target.id==='plan-overlay') closePlanSheet(); });
+document.getElementById('plan-save').addEventListener('click',async()=>{
+  const title=document.getElementById('f-title').value.trim();
+  if(!title){ document.getElementById('f-title').focus(); return; }
+  const rec={ id:document.getElementById('f-id').value||'', title, cat:selectedCat, date:document.getElementById('f-date').value, time:document.getElementById('f-time').value, cur:document.getElementById('f-cur').value, cost:document.getElementById('f-cost').value?Number(document.getElementById('f-cost').value):null, notes:document.getElementById('f-notes').value.trim() };
+  closePlanSheet(); await persistActivity(rec);
+});
+document.getElementById('plan-delete').addEventListener('click',async()=>{
+  const id=document.getElementById('f-id').value; if(!id) return;
+  if(!confirm('Delete this plan?')) return;
+  closePlanSheet(); await removeActivity(id);
+});
+
+// ---------- stay ----------
+function renderStay(){
+  const c=document.getElementById('stay-content');
+  if(!stay||!stay.name){
+    c.innerHTML='<div class="empty"><div class="big">🏠</div><p>No stay added yet.<br>Save your Airbnb details for quick access.</p><button class="btn btn-primary" id="stay-add-btn">＋ Add your stay</button></div>';
+    document.getElementById('stay-add-btn').addEventListener('click',()=>openStaySheet()); return;
+  }
+  const mapsUrl='https://maps.google.com/?q='+encodeURIComponent(stay.addr||stay.name);
+  let h='<div class="stay-card"><div class="stay-name">'+escapeHtml(stay.name)+'</div>';
+  if(stay.addr) h+='<div class="stay-addr">'+escapeHtml(stay.addr)+'</div>';
+  h+='<div class="stay-inout"><div><div class="k">Check-in</div><div class="v">'+(stay.checkin?fmtDate(stay.checkin):'—')+(stay.checkinT?' · '+fmtTime(stay.checkinT):'')+'</div></div><div><div class="k">Check-out</div><div class="v">'+(stay.checkout?fmtDate(stay.checkout):'—')+(stay.checkoutT?' · '+fmtTime(stay.checkoutT):'')+'</div></div></div>';
+  h+='<div class="stay-meta">';
+  if(stay.conf) h+='<div><div class="k">Confirmation</div><div class="v">'+escapeHtml(stay.conf)+'</div></div>';
+  if(stay.host) h+='<div><div class="k">Host</div><div class="v">'+escapeHtml(stay.host)+'</div></div>';
+  if(stay.wifi) h+='<div><div class="k">Wi-Fi</div><div class="v">'+escapeHtml(stay.wifi)+'</div></div>';
+  h+='</div>';
+  if(stay.notes) h+='<div class="stay-notes">'+escapeHtml(stay.notes)+'</div>';
+  h+='<div class="stay-actions"><a class="mini-link" href="'+mapsUrl+'" target="_blank" rel="noopener">📍 Map</a>';
+  if(stay.phone) h+='<a class="mini-link" href="tel:'+escapeHtml(stay.phone)+'">📞 Host</a>';
+  if(stay.link) h+='<a class="mini-link" href="'+escapeHtml(stay.link)+'" target="_blank" rel="noopener">🔗 Listing</a>';
+  h+='</div></div><button class="btn btn-ghost" id="stay-edit-btn">Edit stay details</button>';
+  c.innerHTML=h;
+  document.getElementById('stay-edit-btn').addEventListener('click',()=>openStaySheet());
+}
+function openStaySheet(){
+  const s=stay||{};
+  document.getElementById('s-name').value=s.name||'';
+  document.getElementById('s-addr').value=s.addr||'';
+  document.getElementById('s-checkin').value=s.checkin||'2026-06-22';
+  document.getElementById('s-checkin-t').value=s.checkinT||'';
+  document.getElementById('s-checkout').value=s.checkout||'2026-07-02';
+  document.getElementById('s-checkout-t').value=s.checkoutT||'';
+  document.getElementById('s-conf').value=s.conf||'';
+  document.getElementById('s-host').value=s.host||'';
+  document.getElementById('s-phone').value=s.phone||'';
+  document.getElementById('s-wifi').value=s.wifi||'';
+  document.getElementById('s-link').value=s.link||'';
+  document.getElementById('s-notes').value=s.notes||'';
+  document.getElementById('stay-overlay').classList.add('open');
+}
+function closeStaySheet(){ document.getElementById('stay-overlay').classList.remove('open'); }
+document.getElementById('stay-cancel').addEventListener('click',closeStaySheet);
+document.getElementById('stay-overlay').addEventListener('click',e=>{ if(e.target.id==='stay-overlay') closeStaySheet(); });
+document.getElementById('stay-save').addEventListener('click',async()=>{
+  const name=document.getElementById('s-name').value.trim();
+  if(!name){ document.getElementById('s-name').focus(); return; }
+  const s={ name, addr:document.getElementById('s-addr').value.trim(), checkin:document.getElementById('s-checkin').value, checkinT:document.getElementById('s-checkin-t').value, checkout:document.getElementById('s-checkout').value, checkoutT:document.getElementById('s-checkout-t').value, conf:document.getElementById('s-conf').value.trim(), host:document.getElementById('s-host').value.trim(), phone:document.getElementById('s-phone').value.trim(), wifi:document.getElementById('s-wifi').value.trim(), link:document.getElementById('s-link').value.trim(), notes:document.getElementById('s-notes').value.trim() };
+  closeStaySheet(); await persistStay(s);
+});
+
+// ---------- trip sharing ----------
+function tripLink(){ return location.origin+location.pathname+'?trip='+tripCode; }
+function openTripSheet(){ renderTripSheet(); document.getElementById('trip-overlay').classList.add('open'); }
+function closeTripSheet(){ document.getElementById('trip-overlay').classList.remove('open'); }
+document.getElementById('trip-overlay').addEventListener('click',e=>{ if(e.target.id==='trip-overlay') closeTripSheet(); });
+document.getElementById('trip-btn').addEventListener('click',openTripSheet);
+document.getElementById('sync-banner-btn').addEventListener('click',openTripSheet);
+
+function renderTripSheet(){
+  const body=document.getElementById('trip-sheet-body');
+  if(mode==='local'){
+    body.innerHTML='<div class="sheet-grab" style="display:none"></div><h2>Sharing isn\'t set up</h2><p class="lead">This copy is running locally, so plans only live on this device. To let your family edit the same trip together, the app needs your Supabase keys added and to be hosted online. Until then, everything still works here on your phone.</p><button class="btn btn-ghost" id="trip-close-btn">Got it</button>';
+    document.getElementById('trip-close-btn').addEventListener('click',closeTripSheet);
+    return;
+  }
+  if(!tripCode){
+    body.innerHTML=
+      '<h2>Share this trip</h2><p class="lead">Create a trip to get a link your family can open. Anyone with the link can view and edit together.</p>'+
+      '<div class="field"><label for="t-name">Trip name</label><input type="text" id="t-name" value="Brody\'s Japan Trip"></div>'+
+      '<button class="btn btn-primary" id="t-create">Create trip</button>'+
+      '<div class="divider-or">or join an existing one</div>'+
+      '<div class="field"><label for="t-join">Trip code or link</label><input type="text" id="t-join" placeholder="Paste code or link"></div>'+
+      '<button class="btn btn-ghost" id="t-join-btn">Join trip</button>';
+    document.getElementById('t-create').addEventListener('click',createTrip);
+    document.getElementById('t-join-btn').addEventListener('click',()=>joinTrip(document.getElementById('t-join').value));
+    return;
+  }
+  body.innerHTML=
+    '<h2>Trip shared</h2><p class="lead">Send this link to your family. Whoever opens it joins '+escapeHtml(tripName||'this trip')+' and edits the same plans live.</p>'+
+    '<div class="code-box"><div class="lbl">Trip link</div><div class="code">'+escapeHtml(tripLink())+'</div></div>'+
+    '<div class="sheet-actions"><button class="btn btn-ghost" id="t-copy-code">Copy code</button><button class="btn btn-primary" id="t-copy-link">Copy link</button></div>'+
+    '<div style="margin-top:10px"><button class="btn btn-danger" id="t-leave">Leave trip on this device</button></div>';
+  document.getElementById('t-copy-code').addEventListener('click',()=>copyText(tripCode,'Code copied'));
+  document.getElementById('t-copy-link').addEventListener('click',()=>copyText(tripLink(),'Link copied'));
+  document.getElementById('t-leave').addEventListener('click',async()=>{ tripCode=null; await Local.set('tripCode',null); updateTripUI(); renderTripSheet(); await loadAll(); });
+}
+function copyText(txt,msg){
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>toast(msg)).catch(()=>toast('Copy failed')); }
+  else { toast('Copy not available'); }
+}
+async function createTrip(){
+  const name=(document.getElementById('t-name').value||'Our Trip').trim();
+  const { data, error } = await supa.rpc('create_trip',{ p_name: name });
+  if(error){ toast('Could not create trip'); console.warn(error); return; }
+  tripCode=data; tripName=name; await Local.set('tripCode',tripCode);
+  updateTripUI(); await loadAll(); renderTripSheet(); toast('Trip created');
+}
+async function joinTrip(input){
+  let code=(input||'').trim();
+  const m=code.match(/trip=([0-9a-fA-F-]{36})/); if(m) code=m[1];
+  if(!/^[0-9a-fA-F-]{36}$/.test(code)){ toast('That code doesn\'t look right'); return; }
+  const { data, error } = await supa.rpc('get_trip',{ p_code: code });
+  if(error||data===null){ toast('Trip not found'); return; }
+  tripCode=code; tripName=data.name||''; await Local.set('tripCode',tripCode);
+  updateTripUI(); await loadAll(); closeTripSheet(); toast('Joined '+(tripName||'trip'));
+}
+function updateTripUI(){
+  const btn=document.getElementById('trip-btn'), lbl=document.getElementById('trip-btn-label');
+  const banner=document.getElementById('sync-banner'), bt=document.getElementById('sync-banner-text'), bb=document.getElementById('sync-banner-btn');
+  if(mode==='local'){
+    btn.classList.remove('live'); lbl.textContent='Sync';
+    banner.classList.remove('hidden'); bt.textContent='Local only — plans stay on this device.'; bb.textContent='Why?';
+  } else if(!tripCode){
+    btn.classList.remove('live'); lbl.textContent='Share';
+    banner.classList.remove('hidden'); bt.textContent='Not connected to a trip yet.'; bb.textContent='Set up';
+  } else {
+    btn.classList.add('live'); lbl.textContent='Shared';
+    banner.classList.add('hidden');
+  }
+}
+
+// ---------- init ----------
+async function init(){
+  renderIdeas(); renderCatChips();
+  if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase){
+    try{ supa=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY); mode='cloud'; }
+    catch(e){ console.warn('supabase init failed',e); mode='local'; }
+  }
+  if(mode==='cloud'){
+    const urlCode=new URLSearchParams(location.search).get('trip');
+    tripCode = urlCode || (await Local.get('tripCode')) || null;
+    if(tripCode) await Local.set('tripCode',tripCode);
+  }
+  updateTripUI();
+  await loadAll();
+  if(mode==='cloud' && !tripCode) openTripSheet();
+  // live refresh while the tab is visible
+  setInterval(()=>{ if(mode==='cloud' && tripCode && document.visibilityState==='visible') loadAll(); }, 7000);
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && mode==='cloud' && tripCode) loadAll(); });
+}
+init();
+</script>
+</body>
+</html>
