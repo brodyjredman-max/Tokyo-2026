@@ -1043,6 +1043,23 @@ function buildChatSystemPrompt(){
   return ctx;
 }
 
+function tryLocalCurrencyAnswer(text){
+  const t=text.toLowerCase();
+  const jpyAmt=t.match(/¥\s?([\d,]+(?:\.\d+)?)|([\d,]+(?:\.\d+)?)\s?(?:yen|jpy)\b/);
+  const usdAmt=t.match(/\$\s?([\d,]+(?:\.\d+)?)|([\d,]+(?:\.\d+)?)\s?(?:usd|dollars?)\b/);
+  const mentionsUsdWord=/\busd\b|\bdollars?\b|\$/.test(t);
+  const mentionsJpyWord=/\byen\b|\bjpy\b|¥/.test(t);
+  if(jpyAmt && !usdAmt && mentionsUsdWord){
+    const raw=jpyAmt[1]||jpyAmt[2]; const amt=parseFloat(raw.replace(/,/g,''));
+    if(!isNaN(amt)) return '¥'+Math.round(amt).toLocaleString('en-US')+' is about $'+(amt/JPY_PER_USD).toFixed(2)+' USD — using the same rate as the Currency & Tipping tool in More (~¥'+JPY_PER_USD+' = $1, June 2026, fluctuates daily).';
+  }
+  if(usdAmt && !jpyAmt && mentionsJpyWord){
+    const raw=usdAmt[1]||usdAmt[2]; const amt=parseFloat(raw.replace(/,/g,''));
+    if(!isNaN(amt)) return '$'+amt.toFixed(2)+' is about ¥'+Math.round(amt*JPY_PER_USD).toLocaleString('en-US')+' — using the same rate as the Currency & Tipping tool in More (~¥'+JPY_PER_USD+' = $1, June 2026, fluctuates daily).';
+  }
+  return null;
+}
+
 async function sendChat(){
   const inp=document.getElementById('chat-input');
   const text=inp.value.trim();
@@ -1055,6 +1072,12 @@ async function sendChat(){
   }
   chatMessages.push({role:'user',content:text});
   inp.value='';
+  const localAnswer=tryLocalCurrencyAnswer(text);
+  if(localAnswer){
+    chatMessages.push({role:'assistant',content:localAnswer});
+    await Local.set('chatMessages',chatMessages); renderChat();
+    return;
+  }
   chatBusy=true; renderChat();
   await Local.set('chatMessages',chatMessages);
   try{
